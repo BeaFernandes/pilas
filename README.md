@@ -1,38 +1,61 @@
-This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+# Pilas
+
+(add short description here)
 
 ## Getting Started
 
-First, run the development server:
+### Setup dependencies for dev
+
+- Nodejs: it's recommended to install via NVM ([https://github.com/nvm-sh/nvm](https://github.com/nvm-sh/nvm))
 
 ```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
+wget -qO- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.3/install.sh | bash
+
+nvm install --lts
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+- Postgres database: feel free to use any method to setup your database, this project has a pre-configured file `docker-compose.yml` if you use docker compose:
 
-You can start editing the page by modifying `pages/index.tsx`. The page auto-updates as you edit the file.
+```bash
+docker compose up
+```
 
-[API routes](https://nextjs.org/docs/api-routes/introduction) can be accessed on [http://localhost:3000/api/hello](http://localhost:3000/api/hello). This endpoint can be edited in `pages/api/hello.ts`.
+Tip: database connection string can be found in `docker-compose.yml`, just add it to your `.env`.
 
-The `pages/api` directory is mapped to `/api/*`. Files in this directory are treated as [API routes](https://nextjs.org/docs/api-routes/introduction) instead of React pages.
+### Setup .env
 
-This project uses [`next/font`](https://nextjs.org/docs/basic-features/font-optimization) to automatically optimize and load Inter, a custom Google Font.
+Create a copy of `.env.example` as `.env` and change the required environment variables.
 
-## Learn More
+### Run in development mode
 
-To learn more about Next.js, take a look at the following resources:
+To run the development server:
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+```bash
+yarn dev
+```
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js/) - your feedback and contributions are welcome!
+Open [http://localhost:3000](http://localhost:3000).
 
-## Deploy on Vercel
+## Useful commands
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+(feel free to add more)
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/deployment) for more details.
+### Prisma
+
+Migrate in development mode: this will apply all migrations if needed and create a new one if changes were made to the schema.
+
+```bash
+npx prisma migrate dev
+```
+
+Migrate in production mode: this will not create new migrations, just apply the old ones.
+
+```bash
+npx prisma migrate deploy
+```
+
+Prisma studio: this opens a graphical UI for database management (you can also use adminer if running db with docker compose)
+
+```bash
+npx prisma studio
+```
