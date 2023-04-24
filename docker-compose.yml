@@ -1,0 +1,22 @@
+# Connection url for .env:
+#  DATABASE_URL="postgresql://postgres:postgres@localhost:5432/mydb?schema=public"
+#
+# Adminer is just for debug.
+version: "3.1"
+
+services:
+  db:
+    image: postgres
+    container_name: postgres-pilas-temp
+    restart: always
+    environment:
+      POSTGRES_PASSWORD: postgres
+    ports:
+      - 5432:5432
+
+  adminer:
+    image: adminer
+    container_name: adminer-pilas-temp
+    restart: always
+    ports:
+      - 8080:8080
