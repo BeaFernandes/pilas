@@ -1,6 +1,7 @@
 import { PrismaClient } from '@prisma/client'
 import getAdminSeed from './seeds/admin'
 import { departments } from './seeds/departments'
+import { roles } from './seeds/roles'
 
 const prisma = new PrismaClient()
 
@@ -29,6 +30,19 @@ async function main() {
 				}
 			})
 		),
+
+
+		...roles.map((role) =>
+      prisma.role.upsert({
+        where: {
+          id: role.id,
+        },
+        update: {},
+        create: {
+          ...role,
+        },
+      })
+	  ),
 
 		prisma.user.upsert({
 			where: {

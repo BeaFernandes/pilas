@@ -11,8 +11,9 @@ services:
     restart: always
     environment:
       POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: pilas
     ports:
-      - 5432:5432
+      - 5433:5432
 
   adminer:
     image: adminer
