@@ -1,34 +1,36 @@
-import containsRole from "@/utils/auth/containsRole";
 import { GetServerSideProps } from "next";
 import { getServerSession } from "next-auth";
-import { signOut, useSession } from "next-auth/react";
-import { authOptions } from "../api/auth/[...nextauth]";
+import { useSession } from "next-auth/react";
+import { authOptions } from "../../api/auth/[...nextauth]";
 
-export default function Admin() {
+export default function Balance() {
   const { data: session, status } = useSession();
 
   // Always check for loading status otherwise you're subject to rendering the page while the session still loading
   if (status === "loading") return <div>Loading...</div>;
 
-  console.log(session);
-
-  return (
-    <>
-      <h2> Some super secret dashboard </h2>
-      {session?.user.name}
-
-      <button onClick={() => signOut()}>Sair</button>
-    </>
-  );
+  return <div>Balance for user {session?.user.name} </div>;
 }
 
 export const getServerSideProps: GetServerSideProps = async (context) => {
   const session = await getServerSession(context.req, context.res, authOptions);
 
-  if (!session || !containsRole(session.user, "ADMIN")) {
+  // no need to check roles here, all are accepted as well as the user is logged in
+  if (!session) {
     return {
       redirect: {
         destination: "/api/auth/signin",
+        permanent: false,
+      },
+    };
+  }
+
+  const { fakeId } = context.query;
+
+  if (!(session.user.id.toString() == fakeId)) {
+    return {
+      redirect: {
+        destination: "/401",
         permanent: false,
       },
     };

@@ -1,10 +1,15 @@
-import { GetServerSideProps } from 'next'
-import { signOut, useSession } from 'next-auth/react'
-
+import containsRole from "@/utils/auth/containsRole";
+import { GetServerSideProps } from "next";
+import { getServerSession } from "next-auth";
+import { signOut, useSession } from "next-auth/react";
+import { authOptions } from "../api/auth/[...nextauth]";
 
 export default function Mayor() {
-  const { data: session } = useSession()
-  
+  const { data: session, status } = useSession();
+
+  // Always check for loading status otherwise you're subject to rendering the page while the session still loading
+  if (status === "loading") return <div>Loading...</div>;
+
   return (
     <>
       <h2> Mayor super secret dashboard </h2>
@@ -12,19 +17,31 @@ export default function Mayor() {
 
       <button onClick={() => signOut()}>Sair</button>
     </>
-  )
+  );
 }
 
-Mayor.auth = {
-  unauthorized: '/api/auth/signin'
-}
+export const getServerSideProps: GetServerSideProps = async (context) => {
+  const session = await getServerSession(context.req, context.res, authOptions);
 
-export const getServerSideProps: GetServerSideProps = async () => {
-  // get user form nextauth
+  if (
+    !session ||
+    !(
+      // both admin and mayor are accepted for this page
+      (
+        containsRole(session.user, "MAYOR") ||
+        containsRole(session.user, "ADMIN")
+      )
+    )
+  ) {
+    return {
+      redirect: {
+        destination: "/api/auth/signin",
+        permanent: false,
+      },
+    };
+  }
 
   return {
-    props: {
-      
-    },
-  }
-}
+    props: {},
+  };
+};
