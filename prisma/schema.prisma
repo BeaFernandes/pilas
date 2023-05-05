@@ -11,32 +11,32 @@ datasource db {
 }
 
 model User {
-  id            Int         @id @default(autoincrement())
-  name          String
-  email         String      @unique
-  passwordHash  String
-  department    Department  @relation(fields: [departmentId], references: [id])
-  departmentId  Int
-  balance       Float?
-  roles         Role[]
-  createdAt     DateTime    @default(now())
-  updatedAt     DateTime    @updatedAt
-  admin         Admin?
-  mayor         Mayor[]
-  orders        Order[]
+  id           Int        @id @default(autoincrement())
+  name         String
+  email        String     @unique
+  passwordHash String
+  department   Department @relation(fields: [departmentId], references: [id])
+  departmentId Int
+  balance      Float?
+  roles        Role[]
+  createdAt    DateTime   @default(now())
+  updatedAt    DateTime   @updatedAt
+  admin        Admin?
+  mayor        Mayor[]
+  orders       Order[]
 }
 
 model Department {
-  id            Int       @id @default(autoincrement())
-  name          String    @unique
-  user          User[]
+  id   Int    @id @default(autoincrement())
+  name String @unique
+  user User[]
 }
 
 model Role {
   id    Int    @id
   title String @unique
   users User[]
-} 
+}
 
 model Admin {
   id        Int      @id @default(autoincrement())
@@ -47,34 +47,34 @@ model Admin {
 }
 
 model Mayor {
-  id                 Int      @id @default(autoincrement())
-  user               User     @relation(fields: [userId], references: [id], onDelete: Cascade)
-  userId             Int
-  startOfMandate     DateTime
-  endOfMandate       DateTime
+  id             Int       @id @default(autoincrement())
+  user           User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId         Int
+  startOfMandate DateTime
+  endOfMandate   DateTime?
 }
 
 model Product {
-  id        Int      @id @default(autoincrement())
-  name      String
-  price     Float
-  amount    Int
-  orders    ProductsOrders[]
+  id     Int              @id @default(autoincrement())
+  name   String
+  price  Float
+  amount Int
+  orders ProductsOrders[]
 }
 
 model Order {
-  id        Int      @id @default(autoincrement())
-  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
-  userId    Int
-  products  ProductsOrders[]
+  id       Int              @id @default(autoincrement())
+  user     User             @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId   Int
+  products ProductsOrders[]
 }
 
 model ProductsOrders {
-  id            Int      @id @default(autoincrement())
-  product       Product  @relation(fields: [productId], references: [id], onDelete: Cascade)
-  productId     Int
-  order         Order    @relation(fields: [orderId], references: [id], onDelete: Cascade)
-  orderId       Int
-  productPrice  Float
-  amount        Int
+  id           Int     @id @default(autoincrement())
+  product      Product @relation(fields: [productId], references: [id], onDelete: Cascade)
+  productId    Int
+  order        Order   @relation(fields: [orderId], references: [id], onDelete: Cascade)
+  orderId      Int
+  productPrice Float
+  amount       Int
 }

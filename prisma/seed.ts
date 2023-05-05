@@ -1,12 +1,14 @@
 import { PrismaClient } from '@prisma/client'
 import getAdminSeed from './seeds/admin'
 import { departments } from './seeds/departments'
+import getMayorSeed from './seeds/mayors'
 import { roles } from './seeds/roles'
 
 const prisma = new PrismaClient()
 
 async function main() {
 	const adminSeed = await getAdminSeed()
+	const mayorSeed = await getMayorSeed()
 
 	/*const admin = await prisma.user.upsert({
 			where: {
@@ -33,16 +35,16 @@ async function main() {
 
 
 		...roles.map((role) =>
-      prisma.role.upsert({
-        where: {
-          id: role.id,
-        },
-        update: {},
-        create: {
-          ...role,
-        },
-      })
-	  ),
+			prisma.role.upsert({
+				where: {
+				id: role.id,
+				},
+				update: {},
+				create: {
+				...role,
+				},
+			})
+		),
 
 		prisma.user.upsert({
 			where: {
@@ -54,6 +56,21 @@ async function main() {
 				department: {
 					connect: {
 						name: 'Gestão'
+					}
+				}
+			},
+		}),
+
+		prisma.user.upsert({
+			where: {
+				email: mayorSeed.email
+			},
+			update: {},
+			create: {
+				...mayorSeed,
+				department: {
+					connect: {
+						name: 'NOC'
 					}
 				}
 			},
