@@ -1,3 +1,4 @@
+import Roles from '../../utils/auth/Roles'
 
 type TAdminProps = {
     ADMIN_NAME: string | undefined
@@ -25,6 +26,8 @@ type TAdmin = {
     name: string
     email: string
     passwordHash: string
+    admin: {}
+    roles: {}
 }
 
 export default async function getAdminSeed(): Promise<TAdmin> {
@@ -36,6 +39,14 @@ export default async function getAdminSeed(): Promise<TAdmin> {
     return {
         name: adminProps.ADMIN_NAME as string,
         email: adminProps.ADMIN_EMAIL as string,
-        passwordHash: passwordHash
+        passwordHash: passwordHash,
+        admin: {
+            create: {},
+        },
+        roles: {
+          connect: {
+            id: Roles.ADMIN,
+          },
+        },
     }
 }
