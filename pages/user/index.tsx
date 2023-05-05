@@ -1,6 +1,6 @@
 import { GetServerSideProps } from "next";
 import { getServerSession } from "next-auth";
-import { useSession } from "next-auth/react";
+import { signOut, useSession } from "next-auth/react";
 import { authOptions } from "../api/auth/[...nextauth]";
 
 export default function User() {
@@ -9,7 +9,14 @@ export default function User() {
   // Always check for loading status otherwise you're subject to rendering the page while the session still loading
   if (status === "loading") return <div>Loading...</div>;
 
-  return <div>User {session?.user.name} </div>;
+  return (
+    <>
+      <h2> A regular page </h2>
+      <p>Usuário: {session?.user.name}</p> 
+
+      <button onClick={() => signOut()}>Sair</button>
+    </>
+  );
 }
 
 export const getServerSideProps: GetServerSideProps = async (context) => {
@@ -24,6 +31,7 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
       },
     };
   }
+  // Destination with callback URL: `/api/auth/signin?error=SessionRequired&callbackUrl=${process.env.NEXTAUTH_URL}admin`
 
   return {
     props: {},

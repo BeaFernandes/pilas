@@ -12,8 +12,8 @@ export default function Mayor() {
 
   return (
     <>
-      <h2> Mayor super secret dashboard </h2>
-      {session?.user?.name}
+      <h2> Mayor secret dashboard </h2>
+      <p>Usuário: {session?.user.name}</p> 
 
       <button onClick={() => signOut()}>Sair</button>
     </>

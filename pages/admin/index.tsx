@@ -15,7 +15,7 @@ export default function Admin() {
   return (
     <>
       <h2> Some super secret dashboard </h2>
-      {session?.user.name}
+      <p>Usuário: {session?.user.name}</p> 
 
       <button onClick={() => signOut()}>Sair</button>
     </>

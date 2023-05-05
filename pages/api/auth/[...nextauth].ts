@@ -1,4 +1,3 @@
-import { User } from "@prisma/client";
 import NextAuth, { NextAuthOptions, Session } from "next-auth";
 import CredentialsProvider from "next-auth/providers/credentials";
 import { prisma } from "./../../../lib/prisma";
@@ -67,11 +66,10 @@ export const authOptions: NextAuthOptions = {
       return session;
     },
   },
-  /*theme: {
-    brandColor: '#36A7D0',
-    logo: 'https://acttecnologia.com.br/wp-content/uploads/2022/07/logo.svg',
+  session: {
+    maxAge: 60 * 60,
   },
-  pages: {
+  /*pages: {
     signIn: '/auth/signin',
     signOut: '/auth/signout',
     error: '/auth/error', // Error code passed in query string as ?error=
