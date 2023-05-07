@@ -30,7 +30,7 @@ type TAdmin = {
     roles: {}
 }
 
-export default async function getAdminSeed(): Promise<TAdmin> {
+export default async function generateAdminSeed(): Promise<TAdmin> {
     const adminProps: TAdminProps = getAdminProps()
 
     const bcrypt = require("bcryptjs")

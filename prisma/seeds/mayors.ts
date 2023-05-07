@@ -7,25 +7,26 @@ type TMayor = {
     mayor: {
         create: {
             startOfMandate: Date,
+            endOfMandate: Date | null,
         }
     }
     roles: {}
+    department: {}
 }
 
-export default async function getMayorSeed(): Promise<TMayor> {
-
+export default async function generateMayorsSeed() {
+    const mayors: Array<TMayor> = []
     const bcrypt = require("bcryptjs")
     const passwordHash = bcrypt.hashSync("supersenha", 10)
 
-
-
-    return {
-        name: "User 1",
-        email: "user1@mail.com",
+    mayors.push({
+        name: "Current Mayor",
+        email: "currentmayor@mail.com",
         passwordHash: passwordHash,
         mayor: {
             create: {
                 startOfMandate: new Date(),
+                endOfMandate: null,
             },
         },
         roles: {
@@ -33,5 +34,29 @@ export default async function getMayorSeed(): Promise<TMayor> {
             id: Roles.MAYOR,
           },
         },
-    }
+        department: {
+            connect: {
+                name: "Suporte"
+            }
+        }
+    })
+    mayors.push({
+        name: "Old Mayor",
+        email: "oldmayor@mail.com",
+        passwordHash: passwordHash,
+        mayor: {
+            create: {
+                startOfMandate: new Date("2023-04-01"),
+                endOfMandate: new Date("2023-04-30"),
+            },
+        },
+        roles: {},
+        department: {
+            connect: {
+                name: "NOC"
+            }
+        }
+    })
+
+    return mayors
 }
