@@ -1,6 +1,6 @@
 import { SessionProvider } from "next-auth/react";
-
 import type { AppProps } from "next/app";
+import Layout from '../components/Layout'
 
 interface AppPropsWithAuth extends AppProps {
   Component: AppProps["Component"] & { auth: boolean };
@@ -12,7 +12,9 @@ export default function App({
 }: AppPropsWithAuth) {
   return (
     <SessionProvider session={session}>
-      <Component {...pageProps} />
+      <Layout>
+        <Component {...pageProps} />
+      </Layout>
     </SessionProvider>
   );
 }

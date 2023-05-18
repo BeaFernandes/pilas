@@ -11,10 +11,8 @@ export default function User() {
 
   return (
     <>
-      <h2> A regular page </h2>
+      <h2> Meu perfil </h2>
       <p>Usuário: {session?.user.name}</p> 
-
-      <button onClick={() => signOut()}>Sair</button>
     </>
   );
 }
