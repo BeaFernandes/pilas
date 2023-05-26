@@ -1,11 +1,12 @@
 import Head from 'next/head';
-import { Card, Table, Title } from '@mantine/core';
+import { Button, Card, Drawer, Group, Text, Title } from '@mantine/core';
 import { GetServerSideProps } from 'next';
 import { getServerSession } from 'next-auth';
 import { authOptions } from '../api/auth/[...nextauth]';
 import { Product } from '@prisma/client';
-import Counter from '@/components/Counter';
-import { useState } from 'react';
+import { useDisclosure } from '@mantine/hooks';
+import { IconShoppingCart } from '@tabler/icons-react';
+import ItemsList from './_itemsList';
 
 
 interface ProductsPageProps {
@@ -13,40 +14,31 @@ interface ProductsPageProps {
 }
 
 export default function ProductsPage({products}: ProductsPageProps) {
-  const [count, setCount] = useState(0);
+  const [openedModal, { open, close }] = useDisclosure(false)
 
   return (
     <>
+      <Drawer opened={openedModal} onClose={close} title="Carrinho" position='right'>
+        {/* Drawer content */}
+      </Drawer>
+
       <Head>
         <title>Page title</title>
         <meta name="viewport" content="minimum-scale=1, initial-scale=1, width=device-width" />
       </Head>
 
-      <Title order={2} p='sm'>O que vai ser hoje?</Title>
+      <Group position='apart'>
+        <Title order={2} p='sm'>O que vai ser hoje?</Title>
+        <Button onClick={open}>
+          <Group position='apart'>
+            <IconShoppingCart size={22}/>
+            <Text size={18}>Carrinho</Text>
+          </Group>
+        </Button>
+      </Group>
 
       <Card padding="xl" radius="sm" shadow='xs'>
-        <Table highlightOnHover>
-          <thead>
-            <tr>
-              <th>Item</th>
-              <th>Preço</th>
-              <th>Quantidade</th>
-              <th></th>
-            </tr>
-          </thead>
-          <tbody>
-            {products.map((product) =>
-              <tr key={product.id}>
-                <td>{product.name}</td>
-                <td>{product.price}</td>
-                <td>
-                  <Counter value={count} onChange={setCount}/>
-                </td>  
-                <td>Coloca no carrinho</td>
-              </tr>  
-            )}
-          </tbody>
-        </Table>
+        <ItemsList products={products}/>
         
       </Card>
     </>
