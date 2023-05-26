@@ -1,34 +1,20 @@
 import Head from 'next/head';
-import { Box, Button, Checkbox, Group, Table, TextInput } from '@mantine/core';
-import { useForm } from '@mantine/form';
+import { Card, Table, Title } from '@mantine/core';
+import { GetServerSideProps } from 'next';
+import { getServerSession } from 'next-auth';
+import { authOptions } from '../api/auth/[...nextauth]';
+import { Product } from '@prisma/client';
+import Counter from '@/components/Counter';
+import { useState } from 'react';
 
-export default function ProductsPage() {
-    const form = useForm({
-        initialValues: {
-          email: '',
-          termsOfService: false,
-        },
 
-        validate: {
-            email: (value) => (/^\S+@\S+$/.test(value) ? null : 'Invalid email'),
-          },
-    })
-    const elements = [
-      { position: 6, mass: 12.011, symbol: 'C', name: 'Carbon' },
-      { position: 7, mass: 14.007, symbol: 'N', name: 'Nitrogen' },
-      { position: 39, mass: 88.906, symbol: 'Y', name: 'Yttrium' },
-      { position: 56, mass: 137.33, symbol: 'Ba', name: 'Barium' },
-      { position: 58, mass: 140.12, symbol: 'Ce', name: 'Cerium' },
-    ];
+interface ProductsPageProps {
+  products: Array<Product>
+}
 
-    const rows = elements.map((element) => (
-      <tr key={element.name}>
-        <td>{element.position}</td>
-        <td>{element.name}</td>
-        <td>{element.symbol}</td>
-        <td>{element.mass}</td>
-      </tr>
-    ));
+export default function ProductsPage({products}: ProductsPageProps) {
+  const [count, setCount] = useState(0);
+
   return (
     <>
       <Head>
@@ -36,17 +22,54 @@ export default function ProductsPage() {
         <meta name="viewport" content="minimum-scale=1, initial-scale=1, width=device-width" />
       </Head>
 
-      <Table>
-        <thead>
-          <tr>
-            <th>Element position</th>
-            <th>Element name</th>
-            <th>Symbol</th>
-            <th>Atomic mass</th>
-          </tr>
-        </thead>
-        <tbody>{rows}</tbody>
-    </Table>
+      <Title order={2} p='sm'>O que vai ser hoje?</Title>
+
+      <Card padding="xl" radius="sm" shadow='xs'>
+        <Table highlightOnHover>
+          <thead>
+            <tr>
+              <th>Item</th>
+              <th>Preço</th>
+              <th>Quantidade</th>
+              <th></th>
+            </tr>
+          </thead>
+          <tbody>
+            {products.map((product) =>
+              <tr key={product.id}>
+                <td>{product.name}</td>
+                <td>{product.price}</td>
+                <td>
+                  <Counter value={count} onChange={setCount}/>
+                </td>  
+                <td>Coloca no carrinho</td>
+              </tr>  
+            )}
+          </tbody>
+        </Table>
+        
+      </Card>
     </>
   );
 }
+
+export const getServerSideProps: GetServerSideProps = async (context) => {
+  const session = await getServerSession(context.req, context.res, authOptions);
+
+  if (!session) {
+    return {
+      redirect: {
+        destination: "/api/auth/signin",
+        permanent: false,
+      },
+    };
+  }
+
+  const products = await prisma?.product.findMany()
+
+  return {
+    props: {
+      products,
+    },
+  };
+};
