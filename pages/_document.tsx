@@ -5,7 +5,7 @@ import theme from '@/config/theme'
 
 export default function Document() {
   return (
-    <MantineProvider theme={theme}  withGlobalStyles withNormalizeCSS>
+    <MantineProvider theme={theme} withGlobalStyles withNormalizeCSS>
       <Html lang="en">
         <Head />
         <body>
