@@ -5,6 +5,7 @@ import { getServerSession } from 'next-auth';
 import { authOptions } from '../api/auth/[...nextauth]';
 import { Product } from '@prisma/client';
 import ItemsList from './_itemsList';
+import { useSession } from 'next-auth/react';
 
 
 interface ProductsPageProps {
@@ -12,6 +13,9 @@ interface ProductsPageProps {
 }
 
 export default function ProductsPage({products}: ProductsPageProps) {
+  const { status } = useSession();
+
+  if (status === "loading") return (<div>Loading...</div>)
 
   return (
     <>

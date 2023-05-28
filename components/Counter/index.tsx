@@ -26,10 +26,14 @@ export default function Counter({value, onChange}: CounterProps) {
   return (
     //<Group position="center" sx={{width: '40%', border: '0.1rem solid gray', borderRadius: '0.4rem'}}>
     <Group position="center">
-      <UnstyledButton onClick={onDecreaseButtonPress}>
-        <Text c='#4AC4F3' fz={30}>-</Text>
-      </UnstyledButton>
-      <Text>{count}</Text>
+      {count == 1 ? 
+        <Text c='#9A9A9A' fz={30}>-</Text>
+      :
+        <UnstyledButton onClick={onDecreaseButtonPress} disabled={ count == 1 ? true : false }>
+          <Text c='#4AC4F3' fz={30}>-</Text>
+        </UnstyledButton>
+      }
+      <Text c='#9A9A9A'>{count}</Text>
       <UnstyledButton onClick={onIncreaseButtonPress}>
         <Text c='#4AC4F3' fz={30}>+</Text>
       </UnstyledButton>
