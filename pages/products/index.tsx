@@ -9,10 +9,14 @@ import { useSession } from 'next-auth/react';
 
 
 interface ProductsPageProps {
-  products: Array<Product>
+  products: Array<Product>,
+  currentUser: {
+    id: number,
+    balance: number,
+  },
 }
 
-export default function ProductsPage({products}: ProductsPageProps) {
+export default function ProductsPage({products, currentUser}: ProductsPageProps) {
   const { status } = useSession();
 
   if (status === "loading") return (<div>Loading...</div>)
@@ -27,7 +31,7 @@ export default function ProductsPage({products}: ProductsPageProps) {
       <Title order={2} p='sm' c='#112C55'>O que vai ser hoje?</Title>
 
       <Card padding="xl" radius="sm" shadow='xs'>
-        <ItemsList products={products}/>
+        <ItemsList products={products} currentUser={currentUser}/>
         
       </Card>
     </>
@@ -47,10 +51,20 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
   }
 
   const products = await prisma?.product.findMany()
+  const currentUser = await prisma?.user.findUnique({
+    where: {
+      id: session.user.id,
+    },
+    select: {
+      id: true,
+      balance: true,
+    }
+  })
 
   return {
     props: {
       products,
+      currentUser,
     },
   };
 };

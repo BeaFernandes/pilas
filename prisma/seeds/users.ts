@@ -4,6 +4,7 @@ type TUser = {
     email: string
     passwordHash: string
     department: {}
+    balance: number
 }
 
 export default async function generateUsersSeed(amount: number) {
@@ -20,7 +21,8 @@ export default async function generateUsersSeed(amount: number) {
                 connect: {
                     id: Math.ceil(Math.random() * 7),
                 }
-            }
+            },
+            balance: 10
         })
     }
     return users

@@ -1,19 +1,23 @@
 import Counter from "@/components/Counter";
-import { Button, Group, List, Modal, Space, Table, Text, TextInput } from "@mantine/core";
+import { Button, Group, JsonInputProps, List, Modal, Space, Table, Text, TextInput } from "@mantine/core";
 import { Order, Product } from "@prisma/client";
 import { useState } from "react";
 import { isInRange, isNotEmpty, useForm } from '@mantine/form';
-import { useSession } from "next-auth/react";
 import { notifications } from "@mantine/notifications";
 import { IconAlertTriangleFilled } from "@tabler/icons-react";
+import axiosApi from "@/services/axiosApi";
 
 interface ProductsPageProps {
-  products: Array<Product>
+  products: Array<Product>,
+  currentUser: {
+    id: number,
+    balance: number,
+  },
 }
 
 interface FormOrder {
   user: {
-    id: number | undefined,
+    id: number,
     balance: number,
   },
   product: {
@@ -21,28 +25,26 @@ interface FormOrder {
     price: number,
   },
   amount: number,
-  //total: number,
 }
 
-export default function ItemsList({products}: ProductsPageProps) {
-  const { data: session } = useSession();
-  const [count, setCount] = useState(1)
+export default function ItemsList({products, currentUser}: ProductsPageProps) {
   const [openedModal, setModalOpen] = useState(false)
-  const [chosenProduct, setChosenProduct] = useState<Product>();
-  const [chosenProductPrice, setChosenProductPrice] = useState(0);
+  const [amount, setAmount] = useState(1)
+  const [chosenProduct, setChosenProduct] = useState<Product>()
+  const [chosenProductPrice, setChosenProductPrice] = useState(0)
+  //const [userBalance, setUserBalance] = useState(currentUser.balance)
 
   const form = useForm<FormOrder>({
     initialValues: {
       user: {
-        id: session?.user.id,
-        balance: session?.user.balance ? session?.user.balance : 0
+        id: currentUser.id,
+        balance: currentUser.balance
       },
       product: {
         id: chosenProduct?.id,
-        price: chosenProductPrice ? chosenProductPrice : 0,
+        price: chosenProductPrice,
       },
-      amount: count,
-      //total: 0,
+      amount: amount,
     },
 
     validate: {
@@ -52,7 +54,7 @@ export default function ItemsList({products}: ProductsPageProps) {
       },
       amount:  isInRange({min: 1}, 'Você precisa selecionar pelo menos um item'),
       user: {
-        id: isNotEmpty('Usuário não encontrado'),
+        id: isNotEmpty('Usuário inválido'),
         balance: (value, values) => (
           value < (values.product.price*values.amount) ? 
           'Sinto muito, você vai precisar de mais Pila na conta' : 
@@ -65,15 +67,18 @@ export default function ItemsList({products}: ProductsPageProps) {
   const onModalOpen = (product: Product) => {
     setChosenProduct(product)
     setChosenProductPrice(product.price)
+
+    //console.log(form.values)
+
     setModalOpen(true)
   }
 
   const onModalClose = () => {
     setModalOpen(false)
-    setCount(1)
+    setAmount(1)
   }
 
-  const handleError = () => {
+  const handleError = (errors: string | { [key: string]: string | Iterable<string> } | null) => {
     console.log('passou aqui no erro')
     notifications.show({
       title: 'Sinto muito! 🙁',
@@ -81,12 +86,22 @@ export default function ItemsList({products}: ProductsPageProps) {
         <List icon={ <Text color='red'><IconAlertTriangleFilled /></Text> }>
           {!form.isValid('user.id') && (
             <List.Item>
-              {'Usuário não encontrado'}
+              {'Usuário inválido'}
             </List.Item>
           )}
           {!form.isValid('user.balance') && (
             <List.Item>
               {'Você vai precisar de mais Pila na conta'}
+            </List.Item>
+          )}
+          {!form.isValid('product.id') && (
+            <List.Item>
+              {'Produto não encontrado'}
+            </List.Item>
+          )}
+          {!form.isValid('amount') && (
+            <List.Item>
+              {'Você precisa selecionar pelo menos um item'}
             </List.Item>
           )}
         </List>
@@ -95,37 +110,54 @@ export default function ItemsList({products}: ProductsPageProps) {
     })
   }
 
-  const handleSubmit = () => {
+  const handleSubmit = async () => {
     form.setValues({ 
       product: {
         id: chosenProduct?.id,
-        price: chosenProduct ? chosenProduct.price : 0,
+        price: chosenProductPrice,
       },
-      amount: count,
-      /*user: {
-        id: session?.user.id,
-        balance: session?.user.balance ? session.user.balance : 0,
-      },
-      //total: chosenProduct ? chosenProduct.price * count : 0*/
+      amount: amount,
     });
-    console.log(form.values)
 
-    form.validate()
+    axiosApi
+      .post('/api/order/create', form.values)
+      .then((res) => {
+        if (res.status == 201) {
+          notifications.show({
+            title: 'Uhul!',
+            message: 'Item comprado, agora é só aproveitar',
+            color: "green",
+          })
+        } else {
+          notifications.show({
+            title: 'Ops! 🙁',
+            message: 'Algo de errado não está certo, tente novamente mais tarde.',
+            color: "red",
+          })
+        }
+      })
+      .catch((e) => {
+        if (e.response.data.data) {
+          handleError(e.response.data.data)
+        }
+      })
 
-    if(form.isValid()) {
+    /*if(form.isValid()) {
       console.log('validou')
       try {
+
       } catch (error) {
         notifications.show({
           title: 'Ops! 🙁',
           message: 'Algo de errado não está certo, tente novamente mais tarde.',
           color: "red",
-        });
+        })
       }
     } else {
       handleError()
-    }
+    }*/
 
+    //onModalClose()
   }
 
   return (
@@ -150,12 +182,12 @@ export default function ItemsList({products}: ProductsPageProps) {
               <Text my='md'>Esta delícia custa <Text fw='bold' span> {chosenProduct?.price} Pila</Text></Text>
 
               <Group position='right'>
-                <Counter value={count} onChange={setCount} />
+                <Counter value={amount} onChange={setAmount} />
                 <Button type='button' onClick={handleSubmit} variant='gradient' gradient={{from: '#4AC4F3', to: '#2399EF'}} radius='xl'>
                   <Group position='apart'>
                     <Text>Comprar</Text>
                     <Space />
-                    <Text span>{count*chosenProductPrice} Pila</Text> 
+                    <Text span>{amount*chosenProductPrice} Pila</Text> 
                   </Group>
                 </Button>
               </Group>
