@@ -1,11 +1,12 @@
 import Head from 'next/head';
-import { Card, Title } from '@mantine/core';
+import { Card, Group, Text, Title } from '@mantine/core';
 import { GetServerSideProps } from 'next';
 import { getServerSession } from 'next-auth';
 import { authOptions } from '../api/auth/[...nextauth]';
 import { Product } from '@prisma/client';
 import ItemsList from './_itemsList';
 import { useSession } from 'next-auth/react';
+import { useState } from 'react';
 
 
 interface ProductsPageProps {
@@ -17,7 +18,8 @@ interface ProductsPageProps {
 }
 
 export default function ProductsPage({products, currentUser}: ProductsPageProps) {
-  const { status } = useSession();
+  const { status } = useSession()
+  const [userBalance, setUserBalance] = useState(currentUser.balance)
 
   if (status === "loading") return (<div>Loading...</div>)
 
@@ -27,12 +29,15 @@ export default function ProductsPage({products, currentUser}: ProductsPageProps)
         <title>Produtos</title>
         <meta name="viewport" content="minimum-scale=1, initial-scale=1, width=device-width" />
       </Head>
-
-      <Title order={2} p='sm' c='#112C55'>O que vai ser hoje?</Title>
+      <Group position='apart' c='#112C55'>
+        <Title order={2} p='sm'>O que vai ser hoje?</Title>
+        <Text>
+          Seu saldo:<Text p='sm' fw='bold' fz='xl' span> {userBalance} Pila</Text>
+        </Text>
+      </Group>
 
       <Card padding="xl" radius="sm" shadow='xs'>
-        <ItemsList products={products} currentUser={currentUser}/>
-        
+        <ItemsList products={products} currentUser={currentUser} onBalanceUpdate={setUserBalance}/>
       </Card>
     </>
   );

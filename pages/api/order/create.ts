@@ -1,4 +1,4 @@
-import { ApiHandleError } from "@/errors/ApiHandleError";
+import { ApiError, ApiHandleError } from "@/errors/ApiHandleError";
 import withErrorHandler from "@/utils/api/withErrorHandler";
 import { Order } from "@prisma/client";
 import { NextApiRequest, NextApiResponse } from "next";
@@ -15,15 +15,23 @@ interface ReqProps {
   amount: number,
 }
 
+interface ResProps {
+  order: Order | undefined,
+  user: {
+    newBalance: number | undefined | null,
+  },
+}
+
+
 const handlerFunction = async (
   req: NextApiRequest,
-  res: NextApiResponse<Order | undefined>
+  res: NextApiResponse<ResProps | undefined>
 ) => {
   if (req.method == 'POST') {
     const { user, product, amount }: ReqProps = req.body
     const orderTotal = product.price*amount
 
-    const errors: { [key: string]: string | Iterable<string> } = {}
+    const errors: ApiError = {}
 
     const validUser = await prisma?.user.findUnique({
       where: { id: user.id }
@@ -33,13 +41,13 @@ const handlerFunction = async (
     })
 
     if (!validUser) { 
-      errors['userId'] = ['Usuário inválido'] 
+      errors['userId'] = 'Usuário inválido'
     } else {
       const userBalance = validUser.balance ? validUser.balance : 0
-      if (userBalance < orderTotal) errors['userBalance'] = ['Você vai precisar de mais Pila na conta']
+      if (userBalance < orderTotal) errors['userBalance'] = 'Você vai precisar de mais Pila na conta'
     }
-    if (!validProduct && !product.price) errors['productId'] = ['Produto inválido']
-    if (!amount) errors['amount'] = ['Você precisa selecionar pelo menos um item']
+    if (!validProduct && !product.price) errors['productId'] = 'Produto inválido'
+    if (!amount) errors['amount'] = 'Você precisa selecionar pelo menos um item'
 
     if (Object.keys(errors).length > 0) throw new ApiHandleError(400, errors)
 
@@ -60,7 +68,7 @@ const handlerFunction = async (
       },
     })
 
-    await prisma?.user.update({
+    const updateUser = await prisma?.user.update({
       where: {
         id: user.id,
       },
@@ -71,7 +79,14 @@ const handlerFunction = async (
       }
     })
 
-    res.status(201).json(order)
+    const response: ResProps = {
+      order: order,
+      user: {
+        newBalance: updateUser?.balance,
+      },
+    }
+
+    res.status(201).json(response)
   }
 }
 
