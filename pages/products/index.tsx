@@ -6,7 +6,6 @@ import { authOptions } from '../api/auth/[...nextauth]';
 import { Product } from '@prisma/client';
 import ItemsList from './_itemsList';
 import { useSession } from 'next-auth/react';
-import { useState } from 'react';
 
 
 interface ProductsPageProps {
@@ -19,7 +18,6 @@ interface ProductsPageProps {
 
 export default function ProductsPage({products, currentUser}: ProductsPageProps) {
   const { status } = useSession()
-  const [userBalance, setUserBalance] = useState(currentUser.balance)
 
   if (status === "loading") return (<div>Loading...</div>)
 
@@ -32,12 +30,12 @@ export default function ProductsPage({products, currentUser}: ProductsPageProps)
       <Group position='apart' c='#112C55'>
         <Title order={2} p='sm'>O que vai ser hoje?</Title>
         <Text>
-          Seu saldo:<Text p='sm' fw='bold' fz='xl' span> {userBalance} Pila</Text>
+          Seu saldo:<Text p='sm' fw='bold' fz='xl' span> {currentUser.balance} Pila</Text>
         </Text>
       </Group>
 
       <Card padding="xl" radius="sm" shadow='xs'>
-        <ItemsList products={products} currentUser={currentUser} onBalanceUpdate={setUserBalance}/>
+        <ItemsList products={products} currentUser={currentUser} />
       </Card>
     </>
   );
@@ -55,7 +53,13 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
     };
   }
 
-  const products = await prisma?.product.findMany()
+  const products = await prisma?.product.findMany({
+    where: {
+      amount: {
+        gt: 0,
+      },
+    }
+  })
   const currentUser = await prisma?.user.findUnique({
     where: {
       id: session.user.id,

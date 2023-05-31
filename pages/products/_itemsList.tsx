@@ -6,22 +6,24 @@ import { notifications } from "@mantine/notifications";
 import { IconAlertTriangleFilled } from "@tabler/icons-react";
 import axiosApi from "@/services/axiosApi";
 import { ApiError } from "@/errors/ApiHandleError";
+import { useRouter } from "next/navigation";
+
 
 interface ProductsPageProps {
   products: Array<Product>,
   currentUser: {
     id: number,
     balance: number,
-  },
-  onBalanceUpdate: Function
+  }
 }
 
-export default function ItemsList({products, currentUser, onBalanceUpdate}: ProductsPageProps) {
+export default function ItemsList({products, currentUser}: ProductsPageProps) {
+  const router = useRouter()
   const [openedModal, setModalOpen] = useState(false)
   const [amount, setAmount] = useState(1)
   const [chosenProduct, setChosenProduct] = useState<Product>()
   const [chosenProductPrice, setChosenProductPrice] = useState(0)
-  //const [userBalance, setUserBalance] = useState(currentUser.balance)
+
   
   const onModalOpen = (product: Product) => {
     setChosenProduct(product)
@@ -70,8 +72,7 @@ export default function ItemsList({products, currentUser, onBalanceUpdate}: Prod
       .post('/api/order/create', values)
       .then((res) => {
         if (res.status == 201) {
-          //setUserBalance(res.data.user.newBalance)
-          onBalanceUpdate?.(res.data.user.newBalance)
+          router.push('/products')
           notifications.show({
             title: 'Uhul!',
             message: 'Item comprado, agora é só aproveitar',
@@ -86,6 +87,7 @@ export default function ItemsList({products, currentUser, onBalanceUpdate}: Prod
         }
       })
       .catch((e) => {
+        router.push('/products')
         if (e.response.data.data) {
           handleError(e.response.data.data)
         }

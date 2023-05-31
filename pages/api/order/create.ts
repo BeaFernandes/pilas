@@ -15,17 +15,9 @@ interface ReqProps {
   amount: number,
 }
 
-interface ResProps {
-  order: Order | undefined,
-  user: {
-    newBalance: number | undefined | null,
-  },
-}
-
-
 const handlerFunction = async (
   req: NextApiRequest,
-  res: NextApiResponse<ResProps | undefined>
+  res: NextApiResponse<Order | undefined>
 ) => {
   if (req.method == 'POST') {
     const { user, product, amount }: ReqProps = req.body
@@ -37,8 +29,12 @@ const handlerFunction = async (
       where: { id: user.id }
     })
     const validProduct = await prisma?.product.findUnique({
-      where: { id: product.id }
+      where: {
+        id: product.id,
+      }
     })
+
+    const producStocktAmount = validProduct?.amount ? validProduct?.amount : 0
 
     if (!validUser) { 
       errors['userId'] = 'Usuário inválido'
@@ -47,6 +43,7 @@ const handlerFunction = async (
       if (userBalance < orderTotal) errors['userBalance'] = 'Você vai precisar de mais Pila na conta'
     }
     if (!validProduct && !product.price) errors['productId'] = 'Produto inválido'
+    if (producStocktAmount < amount) errors['producStocktAmount'] = 'Produto sem estoque suficiente'
     if (!amount) errors['amount'] = 'Você precisa selecionar pelo menos um item'
 
     if (Object.keys(errors).length > 0) throw new ApiHandleError(400, errors)
@@ -68,7 +65,7 @@ const handlerFunction = async (
       },
     })
 
-    const updateUser = await prisma?.user.update({
+    await prisma?.user.update({
       where: {
         id: user.id,
       },
@@ -79,14 +76,18 @@ const handlerFunction = async (
       }
     })
 
-    const response: ResProps = {
-      order: order,
-      user: {
-        newBalance: updateUser?.balance,
+    await prisma?.product.update({
+      where: {
+        id: product.id,
       },
-    }
+      data: {
+        amount: {
+          decrement: amount,
+        },
+      },
+    })
 
-    res.status(201).json(response)
+    res.status(201).json(order)
   }
 }
 
