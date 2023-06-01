@@ -1,4 +1,4 @@
-import { Box, Group, Menu, rem, Text, UnstyledButton, useMantineTheme } from "@mantine/core";
+import { Avatar, Box, Group, Menu, rem, Text, UnstyledButton, useMantineTheme } from "@mantine/core";
 import { IconLogout, IconUser } from "@tabler/icons-react";
 import { signOut } from "next-auth/react";
 import Link from "next/link";
@@ -35,7 +35,7 @@ export default function User({ userName, userEmail }: UserProps) {
               }}
             >
               <Group>
-                <IconUser size="1rem" stroke={2} />
+                <Avatar radius="xl" />
                 <Box sx={{ flex: 1 }}>
                   <Text size="sm" weight={500}>
                     {userName}

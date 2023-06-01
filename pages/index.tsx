@@ -1,6 +1,9 @@
+import { GetServerSideProps } from "next";
+import { getServerSession } from "next-auth";
 import { useSession } from "next-auth/react";
 import { signOut } from "next-auth/react";
 import Link from "next/link";
+import { authOptions } from "./api/auth/[...nextauth]";
 
 export default function Home() {
   const { data: session, status } = useSession();
@@ -15,11 +18,21 @@ export default function Home() {
       </>
     );
   }
-
-  return (
-    <>
-      <p>Bem-vindo ao sistema dos Pilas</p>
-      <Link href="/api/auth/signin">Fazer Login</Link>
-    </>
-  )
 }
+
+export const getServerSideProps: GetServerSideProps = async (context) => {
+  const session = await getServerSession(context.req, context.res, authOptions);
+
+  if (!session) {
+    return {
+      redirect: {
+        destination: "/api/auth/signin",
+        permanent: false,
+      },
+    };
+  }
+
+  return {
+    props: {},
+  };
+};
