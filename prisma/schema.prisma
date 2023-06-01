@@ -55,19 +55,22 @@ model Mayor {
 }
 
 model Product {
-  id     Int     @id @default(autoincrement())
-  name   String  @unique
-  price  Float
-  amount Int
-  orders Order[]
+  id        Int      @id @default(autoincrement())
+  name      String   @unique
+  price     Float
+  amount    Int
+  orders    Order[]
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 }
 
 model Order {
-  id           Int     @id @default(autoincrement())
-  user         User    @relation(fields: [userId], references: [id], onDelete: Cascade)
+  id           Int      @id @default(autoincrement())
+  user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
   userId       Int
-  product      Product @relation(fields: [productId], references: [id], onDelete: Cascade)
+  product      Product  @relation(fields: [productId], references: [id], onDelete: Cascade)
   productId    Int
   productPrice Float
   amount       Int
+  createdAt    DateTime @default(now())
 }
