@@ -9,6 +9,7 @@ interface ReqProps {
   email: string,
   department: string,
   admin: boolean,
+  active: boolean,
 }
 
 const handlerFunction = async (
@@ -17,7 +18,7 @@ const handlerFunction = async (
 ) => {
   if (req.method == 'POST') {
     
-    const { name, email, department, admin }: ReqProps = req.body
+    const { name, email, department, admin, active }: ReqProps = req.body
     
     const errors: ApiError = {}
 
@@ -73,7 +74,7 @@ const handlerFunction = async (
         }
       })
     }
-
+    
     const updatedUser = await prisma?.user.update({
       where: {
         email, 
@@ -84,7 +85,8 @@ const handlerFunction = async (
           connect: {
             id: parseInt(department)
           }
-        }
+        },
+        active: active
       },
     })
 

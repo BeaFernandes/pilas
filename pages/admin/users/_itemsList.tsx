@@ -31,6 +31,7 @@ export default function ItemsList({users, departments}: ProductsPageProps) {
       password: '',
       department: 0,
       admin: false,
+      active: false,
     },
   });
 
@@ -43,7 +44,8 @@ export default function ItemsList({users, departments}: ProductsPageProps) {
       name: user.name,
       email: user.email,
       department: user.departmentId,
-      admin: containsRole(user, 'ADMIN')
+      admin: containsRole(user, 'ADMIN'),
+      active: user.active
     })
 
     setDrawerOpen(true)
@@ -188,6 +190,7 @@ export default function ItemsList({users, departments}: ProductsPageProps) {
                 <Checkbox
                   label="Ativo"
                   {...form.getInputProps('active')}
+                  checked={form.values.active} 
                   my='sm'
                 />
               </Group>
@@ -245,14 +248,16 @@ export default function ItemsList({users, departments}: ProductsPageProps) {
             <th>Nome</th>
             <th>E-mail</th>
             <th>Departamento</th>
+            <th>Estado</th>
           </tr>
         </thead>
         <tbody>
           {users.map((user) =>
               <tr key={user.id} onClick={() => onDrawerOpen(user)}>
-               <td >{user.name}</td>
+                <td >{user.name}</td>
                 <td>{user.email}</td>
                 <td>{user.department.name}</td>
+                <td>{user.active? 'Ativo' : 'Inativo'}</td>
               </tr>
           )}
         </tbody>

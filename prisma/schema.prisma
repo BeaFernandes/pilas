@@ -24,6 +24,7 @@ model User {
   admin        Admin?
   mayor        Mayor[]
   orders       Order[]
+  active       Boolean    @default(true)
 }
 
 model Department {
