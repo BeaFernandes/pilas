@@ -130,7 +130,7 @@ export default function ItemsList({products, currentUser}: ProductsPageProps) {
         </Modal.Content>
       </Modal.Root>
 
-      <Table highlightOnHover verticalSpacing="sm" striped>
+      <Table highlightOnHover verticalSpacing="sm" c='#343434' striped>
         <tbody>
           {products.map((product) =>
             <tr key={product.id} onClick={() => onModalOpen(product)}>

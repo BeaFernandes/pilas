@@ -7,7 +7,6 @@ import { NextApiRequest, NextApiResponse } from "next";
 interface ReqProps {
   name: string,
   email: string,
-  password: string,
   department: string,
   admin: boolean,
 }
@@ -17,45 +16,53 @@ const handlerFunction = async (
   res: NextApiResponse<User | undefined>
 ) => {
   if (req.method == 'POST') {
-
-    const { name, email, password, department, admin }: ReqProps = req.body
-    const bcrypt = require('bcryptjs')
-    const passwordHash = bcrypt.hashSync(password, 10)
+    
+    const { name, email, department, admin }: ReqProps = req.body
     
     const errors: ApiError = {}
 
-    const userExistis = await prisma?.user.findUnique({
-      where: { email: email }
+    const user = await prisma?.user.findUnique({
+      where: { email: email },
+      include: {
+        roles: true,
+      }
     })
 
-    if(userExistis){
-      errors['user'] = 'Este usuário já está cadastrado'
+    if(!user){
+      errors['user'] = 'Usuário inválido'
     } else {
       if (!name) errors['name'] = 'Você precisa preencher um nome'
-      if (!email) errors['email'] = 'Email inválido'
-      if (!password) errors['password'] = 'Você precisa preencher uma senha'
+      if (!email) errors['email'] = 'Você precisa preencher um email'
       if (!department) errors['department'] = 'Você precisa escolher um departamento'
     }
 
     if (Object.keys(errors).length > 0) throw new ApiHandleError(400, errors)
 
-    const user = await prisma?.user.create({
-      data: {
-        name,
-        email,
-        passwordHash: passwordHash,
-        department: {
-          connect: {
-            id: parseInt(department)
-          }
-        }
-      },
-    })
+    const isAdmin = () => {
+      let aux = false
+      user?.roles.map((role) => {
+        if(role.id == Roles.ADMIN) aux = true
+      })
+      return aux
+    }
 
-    if(admin){
+    if(isAdmin() && !admin){
       await prisma?.user.update({
         where: {
-          id: user?.id,
+          email,
+        },
+        data: {
+          roles: {
+            disconnect: {
+              id: Roles.ADMIN,
+            }
+          }
+        }
+      })
+    } else if (!isAdmin() && admin){
+      await prisma?.user.update({
+        where: {
+          email,
         },
         data: {
           roles: {
@@ -67,7 +74,21 @@ const handlerFunction = async (
       })
     }
 
-    res.status(201).json(user)
+    const updatedUser = await prisma?.user.update({
+      where: {
+        email, 
+      },
+      data: {
+        name,
+        department: {
+          connect: {
+            id: parseInt(department)
+          }
+        }
+      },
+    })
+
+    res.status(201).json(updatedUser)
   }
 }
 

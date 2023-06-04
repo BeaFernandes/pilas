@@ -122,8 +122,8 @@ export default function UsersPage({users, departments}: UsersPageProps) {
               />
               <PasswordInput
                 withAsterisk
-                label="Password"
-                placeholder="Password"
+                label="Senha"
+                placeholder="Senha"
                 {...form.getInputProps('password')}
                 my='sm'
                 radius='xl'
@@ -188,20 +188,23 @@ export default function UsersPage({users, departments}: UsersPageProps) {
 export const getServerSideProps: GetServerSideProps = async (context) => {
   const session = await getServerSession(context.req, context.res, authOptions);
 
-  if (!session) {
+  /*if (!session) {
     return {
       redirect: {
         destination: "/api/auth/signin",
         permanent: false,
       },
     };
-  }
+  }*/
 
   const users = await prisma?.user.findMany({
     include: {
       roles: true,
       department: true
-    }
+    },
+    orderBy: {
+      name: 'asc',
+    },
   })
 
   const departments = await prisma?.department.findMany({})

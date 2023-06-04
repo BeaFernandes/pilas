@@ -66,10 +66,10 @@ export const authOptions: NextAuthOptions = {
       return session;
     },
   },
-  session: {
+  /*session: {
     maxAge: 60 * 60,
   },
-  /*pages: {
+  pages: {
     signIn: '/auth/signin',
     signOut: '/auth/signout',
     error: '/auth/error', // Error code passed in query string as ?error=

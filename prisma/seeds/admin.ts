@@ -1,4 +1,4 @@
-import Roles from "@/utils/auth/Roles"
+import Roles from "../../utils/auth/Roles"
 
 
 type TAdminProps = {
