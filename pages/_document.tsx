@@ -7,7 +7,7 @@ import { Notifications } from '@mantine/notifications'
 export default function Document() {
   return (
     <MantineProvider theme={theme} withGlobalStyles withNormalizeCSS>
-      <Html lang="en">
+      <Html lang="pt-br">
         <Head />
         <body>
           <Main />

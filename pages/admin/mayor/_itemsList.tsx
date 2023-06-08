@@ -1,5 +1,5 @@
-import { Anchor, Button, Checkbox, Container, Drawer, Group, List, Modal, PasswordInput, Select, Table, Text, TextInput } from '@mantine/core';
-import { Department, Mayor, Role, User } from "@prisma/client";
+import { List, Table, Text } from '@mantine/core';
+import { Mayor, User } from "@prisma/client";
 import { IconAlertTriangleFilled } from "@tabler/icons-react";
 import { useForm } from '@mantine/form';
 import { ApiError } from '@/errors/ApiHandleError';
@@ -7,8 +7,7 @@ import axiosApi from '@/services/axiosApi';
 import { notifications } from "@mantine/notifications";
 import { useRouter } from "next/navigation";
 import { useState } from 'react';
-import containsRole from '@/utils/auth/containsRole';
-import { useDisclosure } from '@mantine/hooks';
+import moment from "moment";
 
 export type ComposedMayor = Mayor & {
   user: User,
@@ -107,7 +106,7 @@ export default function ItemsList({mayors}: ItemsPageProps) {
           {mayors.map((mayor) =>
               <tr key={mayor.id} onClick={() => onDrawerOpen(mayor)}>
                 <td >{mayor.user.name}</td>
-                <td onClick={() => getMandateMonth(mayor)}>{'a'}</td>
+                <td onClick={() => getMandateMonth(mayor)}>{moment(mayor.startOfMandate).format('MMMM')}</td>
               </tr>
           )}
         </tbody>

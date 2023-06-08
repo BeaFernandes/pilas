@@ -1,11 +1,11 @@
 import Head from 'next/head';
-import { Button, Card, Checkbox, Drawer, Group, List, PasswordInput, Select, Text, TextInput, Title } from '@mantine/core';
+import { Avatar, Button, Card, Flex, Group, List, Text, Title } from '@mantine/core';
 import { GetServerSideProps } from 'next';
 import { getServerSession } from 'next-auth';
 import { Department, Mayor, Role, User } from '@prisma/client';
 import { useSession } from 'next-auth/react';
 import { authOptions } from '@/pages/api/auth/[...nextauth]';
-import { IconAlertTriangleFilled, IconUserPlus, IconUserStar } from '@tabler/icons-react';
+import { IconAlertTriangleFilled, IconStar, IconUserPlus, IconUserStar } from '@tabler/icons-react';
 import { useDisclosure } from '@mantine/hooks';
 import { useForm } from '@mantine/form';
 import axiosApi from '@/services/axiosApi';
@@ -13,6 +13,7 @@ import { notifications } from "@mantine/notifications";
 import { ApiError } from '@/errors/ApiHandleError';
 import { useRouter } from "next/navigation";
 import ItemsList from './_itemsList';
+import moment from 'moment';
 
 export type ComposedMayor = Mayor & {
   user: User,
@@ -20,12 +21,13 @@ export type ComposedMayor = Mayor & {
 
 interface UsersPageProps {
   mayors: Array<ComposedMayor>,
+  currentMayor: ComposedMayor,
 }
 
-export default function MayorPage({mayors}: UsersPageProps) {
+export default function MayorPage({mayors, currentMayor}: UsersPageProps) {
   const router = useRouter()
   const { status } = useSession()
-  const [opened, { open, close }] = useDisclosure(false);
+  const [opened, { open, close }] = useDisclosure(false)
   const form = useForm({
     initialValues: {
       name: '',
@@ -106,7 +108,25 @@ export default function MayorPage({mayors}: UsersPageProps) {
           </Group>
         </Button>
       </Group>
-      <Card padding="xl" radius="sm" shadow='xs'>
+      <Card padding="xl" radius="sm" shadow='xs' c='#343434'>
+        <Flex
+          mih={50}
+          gap="xl"
+          justify="flex-start"
+          align="center"
+          direction="column"
+          wrap="wrap"
+        >
+          <Avatar color="blue" radius="xl" size='lg'>
+            <IconStar size="2rem" />
+          </Avatar>
+          <Title order={3}>{currentMayor.user.name}</Title>
+          <Text c='#9A9A9A'>
+            <Text fw='bold' span c='#343434'>Início do mandato: </Text> 
+            {moment().format('LL')}
+          </Text>
+        </Flex>
+
       </Card>
       <Group position='apart' c='#112C55'>
         <Title order={2} p='sm'>Mandatos anteriores</Title>
@@ -130,6 +150,15 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
       },
     };
   }
+  
+  const currentMayor = await prisma?.mayor.findFirst({
+    include: {
+      user: true,
+    },
+    where: {
+      endOfMandate: null,
+    },
+  })
 
   const mayors = await prisma?.mayor.findMany({
     include: {
@@ -138,11 +167,18 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
     orderBy: {
       startOfMandate: 'asc',
     },
+    where: {
+      id: {
+        not: currentMayor?.id,
+      },
+    },
   })
+
 
   return {
     props: {
       mayors: JSON.parse(JSON.stringify(mayors)),
+      currentMayor: JSON.parse(JSON.stringify(currentMayor)),
     },
   };
 };
