@@ -58,6 +58,7 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
       amount: {
         gt: 0,
       },
+      active: true,
     }
   })
   const currentUser = await prisma?.user.findUnique({
