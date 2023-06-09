@@ -86,7 +86,7 @@ const handlerFunction = async (
             id: parseInt(department)
           }
         },
-        active: active
+        active,
       },
     })
 
