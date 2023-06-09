@@ -1,19 +1,21 @@
 import Head from 'next/head';
-import { Avatar, Button, Card, Flex, Group, List, Text, Title } from '@mantine/core';
+import { Alert, Button, Card, Drawer, Group, List, Select, Text, Title } from '@mantine/core';
+import { DateInput } from '@mantine/dates';
 import { GetServerSideProps } from 'next';
 import { getServerSession } from 'next-auth';
-import { Department, Mayor, Role, User } from '@prisma/client';
+import { Mayor, User } from '@prisma/client';
 import { useSession } from 'next-auth/react';
 import { authOptions } from '@/pages/api/auth/[...nextauth]';
-import { IconAlertTriangleFilled, IconStar, IconUserPlus, IconUserStar } from '@tabler/icons-react';
+import { IconAlertTriangleFilled, IconUserStar } from '@tabler/icons-react';
 import { useDisclosure } from '@mantine/hooks';
 import { useForm } from '@mantine/form';
 import axiosApi from '@/services/axiosApi';
-import { notifications } from "@mantine/notifications";
+import { notifications } from '@mantine/notifications';
 import { ApiError } from '@/errors/ApiHandleError';
-import { useRouter } from "next/navigation";
+import { useRouter } from 'next/navigation';
 import ItemsList from './_itemsList';
-import moment from 'moment';
+import CurrentMayor from '@/components/CurrentMayor';
+import { IconAlertCircle } from '@tabler/icons-react';
 
 export type ComposedMayor = Mayor & {
   user: User,
@@ -22,40 +24,42 @@ export type ComposedMayor = Mayor & {
 interface UsersPageProps {
   mayors: Array<ComposedMayor>,
   currentMayor: ComposedMayor,
+  users: Array<User>,
 }
 
-export default function MayorPage({mayors, currentMayor}: UsersPageProps) {
+export default function MayorPage({mayors, currentMayor, users}: UsersPageProps) {
   const router = useRouter()
   const { status } = useSession()
   const [opened, { open, close }] = useDisclosure(false)
   const form = useForm({
     initialValues: {
-      name: '',
-      email: '',
-      password: '',
-      department: '',
-      admin: false,
+      user: '',
+      startOfMandate: '',
     },
   });
 
+  const usersData: any = users.map((user) => {
+    return {value: user.id, label: user.name}
+  })
+
   const handleSubmit = async () => {
     axiosApi
-      .post('/api/user/create', form.values)
+      .post('/api/mayor/create', form.values)
       .then((res) => {
         if (res.status == 201) {
           form.reset()
           close()
-          router.push('/admin/users')
+          router.push('/admin/mayor')
           notifications.show({
             title: 'Uhul!',
-            message: 'Usuário cadastrado com sucesso.',
-            color: "green",
+            message: 'Prefeito alterado com sucesso',
+            color: 'green',
           })
         } else {
           notifications.show({
             title: 'Ops! 🙁',
             message: 'Algo de errado não está certo, tente novamente mais tarde.',
-            color: "red",
+            color: 'red',
           })
         }
       })
@@ -81,18 +85,68 @@ export default function MayorPage({mayors, currentMayor}: UsersPageProps) {
           })}
         </List>
       ),
-      color: "red",
+      color: 'red',
     })
   }
 
-  if (status === "loading") return (<div>Loading...</div>)
+  if (status === 'loading') return (<div>Loading...</div>)
 
   return (
     <>
+      <Drawer.Root opened={opened} onClose={close} position='right'>
+        <Drawer.Overlay />
+        <Drawer.Content>
+          <Drawer.Header>
+            <Drawer.Title>
+              <Text c='#112C55' fw='bold' size='xl'>Novo prefeito</Text>
+            </Drawer.Title>
+            <Drawer.CloseButton />
+          </Drawer.Header>
+          <Drawer.Body>
+            <form onSubmit={form.onSubmit(() => handleSubmit())}>
+              <Select
+                withAsterisk
+                searchable
+                label='Usuário'
+                placeholder='Selecionar'
+                {...form.getInputProps('user')}
+                my='sm'
+                radius='xl'
+                data={usersData}
+              />
+              <DateInput
+                withAsterisk
+                label='Início do mandato'
+                placeholder='00/00/0000'
+                valueFormat='DD/MM/YYYY'
+                {...form.getInputProps('startOfMandate')}
+                maw={400}
+                mx='auto'
+                my='sm'
+                radius='xl'
+              />
+              <Group position='right'>
+                <Button 
+                  fz='md' 
+                  variant='gradient' 
+                  gradient={{from: '#4AC4F3', to: '#2399EF'}} 
+                  radius='xl'
+                  my='sm'
+                  type='submit'
+                >
+                  Cadastrar
+                </Button>
+              </Group>
+            </form>
+          </Drawer.Body>
+        </Drawer.Content>
+      </Drawer.Root>
+
       <Head>
-        <title>Usuários</title>
-        <meta name="viewport" content="minimum-scale=1, initial-scale=1, width=device-width" />
+        <title>Prefeitos</title>
+        <meta name='viewport' content='minimum-scale=1, initial-scale=1, width=device-width' />
       </Head>
+
       <Group position='apart' c='#112C55' p='sm'>
         <Title order={2} >Prefeito atual</Title>
         <Button 
@@ -108,31 +162,16 @@ export default function MayorPage({mayors, currentMayor}: UsersPageProps) {
           </Group>
         </Button>
       </Group>
-      <Card padding="xl" radius="sm" shadow='xs' c='#343434'>
-        <Flex
-          mih={50}
-          gap="xl"
-          justify="flex-start"
-          align="center"
-          direction="column"
-          wrap="wrap"
-        >
-          <Avatar color="blue" radius="xl" size='lg'>
-            <IconStar size="2rem" />
-          </Avatar>
-          <Title order={3}>{currentMayor.user.name}</Title>
-          <Text c='#9A9A9A'>
-            <Text fw='bold' span c='#343434'>Início do mandato: </Text> 
-            {moment().format('LL')}
-          </Text>
-        </Flex>
 
+      <Card padding='xl' radius='sm' shadow='xs' c='#343434'>
+        <CurrentMayor currentMayor={currentMayor} />
       </Card>
+
       <Group position='apart' c='#112C55'>
         <Title order={2} p='sm'>Mandatos anteriores</Title>
       </Group>
 
-      <Card padding="xl" radius="sm" shadow='xs'>
+      <Card padding='xl' radius='sm' shadow='xs'>
         <ItemsList mayors={mayors}/>
       </Card>
     </>
@@ -145,7 +184,7 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
   if (!session) {
     return {
       redirect: {
-        destination: "/api/auth/signin",
+        destination: '/api/auth/signin',
         permanent: false,
       },
     };
@@ -165,7 +204,7 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
       user: true,
     },
     orderBy: {
-      startOfMandate: 'asc',
+      startOfMandate: 'desc',
     },
     where: {
       id: {
@@ -174,11 +213,21 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
     },
   })
 
+  const users = await prisma?.user.findMany({
+    orderBy: {
+      name: 'asc',
+    },
+    where: {
+      active: true,
+    },
+  })
+
 
   return {
     props: {
       mayors: JSON.parse(JSON.stringify(mayors)),
       currentMayor: JSON.parse(JSON.stringify(currentMayor)),
+      users: JSON.parse(JSON.stringify(users)),
     },
   };
 };

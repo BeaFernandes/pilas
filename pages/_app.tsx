@@ -2,6 +2,10 @@ import { Notifications } from "@mantine/notifications";
 import { SessionProvider } from "next-auth/react";
 import type { AppProps } from "next/app";
 import Layout from '../components/Layout'
+import { MantineProvider } from '@mantine/core'
+import theme from '@/config/theme'
+import { DatesProvider } from "@mantine/dates";
+import 'dayjs/locale/pt-br'
 import 'moment/locale/pt-br'
 
 interface AppPropsWithAuth extends AppProps {
@@ -13,11 +17,15 @@ export default function App({
   pageProps: { session, ...pageProps },
 }: AppPropsWithAuth) {
   return (
-    <SessionProvider session={session}>
-      <Notifications />
-      <Layout>
-        <Component {...pageProps} />
-      </Layout>
-    </SessionProvider>
+    <MantineProvider theme={theme} withGlobalStyles withNormalizeCSS>
+      <SessionProvider session={session}>
+        <DatesProvider settings={{ locale: 'pt-br' }}>
+          <Notifications />
+          <Layout>
+            <Component {...pageProps} />
+          </Layout>
+        </DatesProvider>
+      </SessionProvider>
+    </MantineProvider>  
   );
 }

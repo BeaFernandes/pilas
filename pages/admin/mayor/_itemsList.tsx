@@ -1,13 +1,9 @@
-import { List, Table, Text } from '@mantine/core';
-import { Mayor, User } from "@prisma/client";
-import { IconAlertTriangleFilled } from "@tabler/icons-react";
-import { useForm } from '@mantine/form';
-import { ApiError } from '@/errors/ApiHandleError';
-import axiosApi from '@/services/axiosApi';
-import { notifications } from "@mantine/notifications";
-import { useRouter } from "next/navigation";
+import Counter from '@/components/Counter';
+import { Avatar, Button, Flex, Group, Modal, Space, Table, Text, Title, UnstyledButton } from '@mantine/core';
+import { Mayor, User } from '@prisma/client';
+import { IconStar } from '@tabler/icons-react';
+import moment from 'moment';
 import { useState } from 'react';
-import moment from "moment";
 
 export type ComposedMayor = Mayor & {
   user: User,
@@ -17,85 +13,47 @@ interface ItemsPageProps {
   mayors: Array<ComposedMayor>,
 }
 export default function ItemsList({mayors}: ItemsPageProps) {
-  const [openedDrawer, setDrawerOpen] = useState(false)
   const [openedModal, setModalOpen] = useState(false)
-  const router = useRouter()
-  const form = useForm({
-    initialValues: {
-      name: '',
-      email: '',
-      password: '',
-      department: 0,
-      admin: false,
-      active: false,
-    },
-  });
+  const [chosenMayor, setChosenMayor] = useState<ComposedMayor>()
 
-  const onDrawerOpen = (mayor: ComposedMayor) => {
+  const onModalOpen = (mayor: ComposedMayor) => {
+    setChosenMayor(mayor)
 
-    setDrawerOpen(true)
+    setModalOpen(true)
   }
 
-  const onDrawerClose = () => {
-    setDrawerOpen(false)
-  }
-
-  const handleSubmit = async () => {
-    axiosApi
-      .post('/api/user/update', form.values)
-      .then((res) => {
-        if (res.status == 201) {
-          form.reset()
-          onDrawerClose()
-          router.push('/admin/users')
-          notifications.show({
-            title: 'Uhul!',
-            message: 'Usuário atualizado com sucesso.',
-            color: "green",
-          })
-        } else {
-          notifications.show({
-            title: 'Ops! 🙁',
-            message: 'Algo de errado não está certo, tente novamente mais tarde.',
-            color: "red",
-          })
-        }
-      })
-      .catch((e) => {
-        if (e.response.data.data) {
-          handleError(e.response.data.data)
-        }
-      })
-  }
-
-  const handleError = (errors: ApiError) => {
-    form.setErrors(errors)
-    notifications.show({
-      title: 'Sinto muito! 🙁',
-      message: (
-        <List icon={ <Text color='red'><IconAlertTriangleFilled /></Text> }>
-          {Object.keys(errors).map((key) => {
-            return (
-              <List.Item key={key}>
-                {errors[key]}
-              </List.Item>
-            )
-          })}
-        </List>
-      ),
-      color: "red",
-    })
-  }
-
-  const getMandateMonth = (mayor: ComposedMayor) => {
-    const month = new Date(mayor.startOfMandate)
-    console.log(month)
-    console.log(month.getMonth())
+  const onModalClose = () => {
+    setModalOpen(false)
   }
 
   return (
     <>
-      <Table highlightOnHover verticalSpacing="sm" c='#343434' striped>
+      <Modal.Root 
+        opened={openedModal} 
+        onClose={() => onModalClose()} 
+        transitionProps={{ transition: 'slide-down' }}
+        radius='lg'
+        centered
+      >
+        <Modal.Overlay />
+
+        <Modal.Content c='#343434'>
+            <Modal.Header>
+              <Text c='#112C55' fw='bold' size='xl'>Dados do mandato</Text>
+              <Modal.CloseButton />
+            </Modal.Header>
+
+            <Modal.Body >
+              <Title order={3} align='center'>{chosenMayor?.user.name}</Title>
+
+              <Group position='center' my='lg'>
+                <Text><Text span fw='bold'>Prefeito de: </Text>{moment(chosenMayor?.startOfMandate).format('LL')}</Text>
+                <Text><Text span fw='bold'>Até: </Text>{moment(chosenMayor?.endOfMandate).format('LL')}</Text>
+              </Group>
+            </Modal.Body>
+        </Modal.Content>
+      </Modal.Root>
+      <Table highlightOnHover verticalSpacing='sm' c='#343434' striped>
         <thead>
           <tr>
             <th>Prefeito</th>
@@ -104,9 +62,9 @@ export default function ItemsList({mayors}: ItemsPageProps) {
         </thead>
         <tbody>
           {mayors.map((mayor) =>
-              <tr key={mayor.id} onClick={() => onDrawerOpen(mayor)}>
-                <td >{mayor.user.name}</td>
-                <td onClick={() => getMandateMonth(mayor)}>{moment(mayor.startOfMandate).format('MMMM')}</td>
+              <tr key={mayor.id}>
+                <td><UnstyledButton fz={14} c='#343434' onClick={() => onModalOpen(mayor)}>{mayor.user.name}</UnstyledButton></td>
+                <td>{moment(mayor.startOfMandate).format('MMMM')}</td>
               </tr>
           )}
         </tbody>

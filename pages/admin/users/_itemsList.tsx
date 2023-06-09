@@ -173,6 +173,7 @@ export default function ItemsList({users, departments}: ProductsPageProps) {
               />
               <Select
                 withAsterisk
+                searchable
                 label="Departamento"
                 placeholder="Selecionar"
                 {...form.getInputProps('department')}

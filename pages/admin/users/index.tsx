@@ -93,7 +93,7 @@ export default function UsersPage({users, departments}: UsersPageProps) {
 
   return (
     <>
-    <Drawer.Root opened={opened} onClose={close} position='right'>
+      <Drawer.Root opened={opened} onClose={close} position='right'>
         <Drawer.Overlay />
         <Drawer.Content>
           <Drawer.Header>
@@ -130,6 +130,7 @@ export default function UsersPage({users, departments}: UsersPageProps) {
               />
               <Select
                 withAsterisk
+                searchable
                 label="Departamento"
                 placeholder="Selecionar"
                 {...form.getInputProps('department')}
