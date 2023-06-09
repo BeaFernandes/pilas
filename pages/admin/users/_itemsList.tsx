@@ -1,4 +1,4 @@
-import { Anchor, Button, Checkbox, Container, Drawer, Group, List, Modal, PasswordInput, Select, Table, Text, TextInput } from '@mantine/core';
+import { Anchor, Button, Checkbox, Container, Drawer, Group, List, Modal, PasswordInput, Select, Table, Text, TextInput, UnstyledButton } from '@mantine/core';
 import { Department, Role, User } from "@prisma/client";
 import { IconAlertTriangleFilled } from "@tabler/icons-react";
 import { useForm } from '@mantine/form';
@@ -254,8 +254,8 @@ export default function ItemsList({users, departments}: ProductsPageProps) {
         </thead>
         <tbody>
           {users.map((user) =>
-              <tr key={user.id} onClick={() => onDrawerOpen(user)}>
-                <td >{user.name}</td>
+              <tr key={user.id}>
+                <td><UnstyledButton fz={14} c='#343434' onClick={() => onDrawerOpen(user)}>{user.name}</UnstyledButton></td>
                 <td>{user.email}</td>
                 <td>{user.department.name}</td>
                 <td>{user.active? 'Ativo' : 'Inativo'}</td>
