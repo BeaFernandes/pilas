@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { NavLink } from "@mantine/core";
-import { IconArrowsDownUp, IconHome, IconUser } from "@tabler/icons-react";
+import { IconArrowsDownUp, IconHome, IconUserStar, IconUsers } from "@tabler/icons-react";
 import Link from "next/link";
 
 export default function MainLinks() {
@@ -17,13 +17,35 @@ export default function MainLinks() {
             /*onClick={() => setActive(true)}*/
           />
         </Link>
-        <Link href='/user/movements' style={{ textDecoration: 'none' }}>
+        <Link href='/user/transactions' style={{ textDecoration: 'none' }}>
           <NavLink
             py={20}
-            key="movements"
+            key="transactions"
             active={active}
             label="Movimentações"
             icon={<IconArrowsDownUp size="1rem" stroke={2} />}
+            /*onClick={() => setActive(true)}*/
+          />
+        </Link>
+
+        <Link href='/admin/users' style={{ textDecoration: 'none' }}>
+          <NavLink
+            py={20}
+            key="users"
+            active={active}
+            label="Gerenciar Usuários"
+            icon={<IconUsers size="1rem" stroke={2} />}
+            /*onClick={() => setActive(true)}*/
+          />
+        </Link>
+
+        <Link href='/admin/mayor' style={{ textDecoration: 'none' }}>
+          <NavLink
+            py={20}
+            key="mayor"
+            active={active}
+            label="Gerenciar Prefeito"
+            icon={<IconUserStar size="1rem" stroke={2} />}
             /*onClick={() => setActive(true)}*/
           />
         </Link>

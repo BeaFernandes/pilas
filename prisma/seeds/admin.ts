@@ -1,4 +1,5 @@
-import Roles from '../../utils/auth/Roles'
+import Roles from "../../utils/auth/Roles"
+
 
 type TAdminProps = {
     ADMIN_NAME: string | undefined

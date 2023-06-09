@@ -1,12 +1,12 @@
-import Counter from "@/components/Counter";
-import { Button, Group, List, Modal, Space, Table, Text } from "@mantine/core";
-import { Product } from "@prisma/client";
-import { useState } from "react";
-import { notifications } from "@mantine/notifications";
-import { IconAlertTriangleFilled } from "@tabler/icons-react";
-import axiosApi from "@/services/axiosApi";
-import { ApiError } from "@/errors/ApiHandleError";
-import { useRouter } from "next/navigation";
+import Counter from '@/components/Counter';
+import { Button, Group, List, Modal, Space, Table, Text } from '@mantine/core';
+import { Product } from '@prisma/client';
+import { useState } from 'react';
+import { notifications } from '@mantine/notifications';
+import { IconAlertTriangleFilled } from '@tabler/icons-react';
+import axiosApi from '@/services/axiosApi';
+import { ApiError } from '@/errors/ApiHandleError';
+import { useRouter } from 'next/navigation';
 
 
 interface ProductsPageProps {
@@ -51,7 +51,7 @@ export default function ItemsList({products, currentUser}: ProductsPageProps) {
           })}
         </List>
       ),
-      color: "red",
+      color: 'red',
     })
   }
 
@@ -76,13 +76,13 @@ export default function ItemsList({products, currentUser}: ProductsPageProps) {
           notifications.show({
             title: 'Uhul!',
             message: 'Item comprado, agora é só aproveitar',
-            color: "green",
+            color: 'green',
           })
         } else {
           notifications.show({
             title: 'Ops! 🙁',
             message: 'Algo de errado não está certo, tente novamente mais tarde.',
-            color: "red",
+            color: 'red',
           })
         }
       })
@@ -130,7 +130,7 @@ export default function ItemsList({products, currentUser}: ProductsPageProps) {
         </Modal.Content>
       </Modal.Root>
 
-      <Table highlightOnHover verticalSpacing="sm" striped>
+      <Table highlightOnHover verticalSpacing='sm' c='#343434' striped>
         <tbody>
           {products.map((product) =>
             <tr key={product.id} onClick={() => onModalOpen(product)}>

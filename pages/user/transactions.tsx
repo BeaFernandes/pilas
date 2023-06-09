@@ -2,7 +2,7 @@ import { useSession } from "next-auth/react";
 import { signOut } from "next-auth/react";
 import Link from "next/link";
 
-export default function Movements() {
+export default function Transactions() {
   const { data: session, status } = useSession();
 
   if (status === "loading") return <span>Loading...</span>;

@@ -2,15 +2,15 @@ import { MantineThemeOverride } from "@mantine/core";
 
 const theme: MantineThemeOverride = {
   colorScheme: "light",
-  defaultRadius: 8,
+  defaultRadius: '',
   colors: {
-    'blue': ['#2399EF'],
+    'actBlue': ['#2399EF'],
     'lightBlue': ['#4AC4F3'],
-    'dark-blue': ['#112C55'],
+    'darkBlue': ['#112C55'],
     'black': ['#0e0e11'],
-    'light-black': ['#343434'],
-    'gray': ['#9A9A9A'],
-    'light-gray': ['#F7F7F7'],
+    'lightBlack': ['#343434'],
+    'actGray': ['#9A9A9A'],
+    'lightGray': ['#F7F7F7'],
   },
   primaryColor: 'blue',
   defaultGradient: {

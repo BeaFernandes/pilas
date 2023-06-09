@@ -45,7 +45,7 @@ export default function AppShellDemo({children}: PageLayoutProps) {
       header={
         <Header height={65} px="md" pt={0} pb={0}>
           <Group sx={{ height: '100%' }} position="apart">
-            <Image maw={80} src="Logo.png" ml='md' alt="Logo da Act" withPlaceholder/>
+            <Image maw={80} src="/Logo.png" ml='md' alt="Logo da Act" withPlaceholder/>
 
             <MediaQuery largerThan="sm" styles={{ display: 'none' }}>
               <Burger
