@@ -9,6 +9,7 @@ import { useRouter } from "next/navigation";
 import { useState } from 'react';
 import containsRole from '@/utils/auth/containsRole';
 import { useDisclosure } from '@mantine/hooks';
+import moment from 'moment';
 
 export type ComposedUser = User & {
   roles: Array<Role>,
@@ -32,6 +33,8 @@ export default function ItemsList({users, departments}: ProductsPageProps) {
       department: 0,
       admin: false,
       active: false,
+      createdAt: '',
+      updatedAt: '',
     },
   });
 
@@ -45,7 +48,9 @@ export default function ItemsList({users, departments}: ProductsPageProps) {
       email: user.email,
       department: user.departmentId,
       admin: containsRole(user, 'ADMIN'),
-      active: user.active
+      active: user.active,
+      createdAt: moment(user.createdAt).format('lll'),
+      updatedAt: moment(user.updatedAt).format('lll'),
     })
 
     setDrawerOpen(true)
@@ -181,6 +186,8 @@ export default function ItemsList({users, departments}: ProductsPageProps) {
                 radius='xl'
                 data={departmentsData}
               />
+              <Text fz='sm' c='#9A9A9A' align='right'>Criado em: {form.values.createdAt}</Text>
+              <Text fz='sm' c='#9A9A9A' align='right'>Última edição: {form.values.updatedAt}</Text>
               <Group position='left'>
                 <Checkbox
                   label="Administrador"
