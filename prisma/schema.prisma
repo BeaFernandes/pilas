@@ -17,7 +17,7 @@ model User {
   passwordHash String
   department   Department @relation(fields: [departmentId], references: [id])
   departmentId Int
-  balance      Float?
+  balance      Float      @default(0)
   roles        Role[]
   createdAt    DateTime   @default(now())
   updatedAt    DateTime   @updatedAt

@@ -29,11 +29,11 @@ async function main() {
 		...roles.map((role) =>
 			prisma.role.upsert({
 				where: {
-				id: role.id,
+					id: role.id,
 				},
 				update: {},
 				create: {
-				...role,
+				  ...role,
 				},
 			})
 		),
