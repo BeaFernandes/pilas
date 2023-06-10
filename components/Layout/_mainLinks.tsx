@@ -60,6 +60,17 @@ export default function MainLinks() {
             /*onClick={() => setActive(true)}*/
           />
         </Link>
+
+        <Link href='/mayor/users' style={{ textDecoration: 'none' }}>
+          <NavLink
+            py={20}
+            key="users"
+            active={active}
+            label="Gerenciar Usuários"
+            icon={<IconUsers size="1rem" stroke={2} />}
+            /*onClick={() => setActive(true)}*/
+          />
+        </Link>
       </>
   );
 }

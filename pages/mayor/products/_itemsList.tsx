@@ -146,7 +146,7 @@ export default function ItemsList({products}: ProductsPageProps) {
               <Text fz='sm' c='#9A9A9A' align='right'>Criado em: {form.values.createdAt}</Text>
               <Text fz='sm' c='#9A9A9A' align='right'>Última edição: {form.values.updatedAt}</Text>
               <Checkbox
-                label="Habilitado"
+                label="Ativo"
                 {...form.getInputProps('active')}
                 checked={form.values.active} 
                 my='sm'
@@ -174,8 +174,8 @@ export default function ItemsList({products}: ProductsPageProps) {
             <th>Nome</th>
             <th>Preço</th>
             <th>Quantidade</th>
-            <th>Última edição</th>
             <th>Estado</th>
+            <th>Última edição</th>
           </tr>
         </thead>
         <tbody>
@@ -184,8 +184,8 @@ export default function ItemsList({products}: ProductsPageProps) {
                 <td><UnstyledButton fz={14} c='#343434' onClick={() => onDrawerOpen(product)}>{product.name}</UnstyledButton></td>
                 <td>{product.price} Pila</td>
                 <td>{product.amount}</td>
-                <td>{moment(product.updatedAt).format('lll')}</td>
                 <td>{product.active ? 'Ativo' : 'Inativo'}</td>
+                <td>{moment(product.updatedAt).format('lll')}</td>
               </tr>
           )}
         </tbody>
