@@ -27,10 +27,10 @@ export default function ProductsPage({products, currentUser}: ProductsPageProps)
         <title>Produtos</title>
         <meta name="viewport" content="minimum-scale=1, initial-scale=1, width=device-width" />
       </Head>
-      <Group position='apart' c='#112C55'>
-        <Title order={2} p='sm'>O que vai ser hoje?</Title>
+      <Group position='apart' c='#112C55' p='sm'>
+        <Title order={2}>O que vai ser hoje?</Title>
         <Text>
-          Seu saldo:<Text p='sm' fw='bold' fz='xl' span> {currentUser.balance} Pila</Text>
+          Seu saldo:<Text fw='bold' fz='xl' span> {currentUser.balance} Pila</Text>
         </Text>
       </Group>
 

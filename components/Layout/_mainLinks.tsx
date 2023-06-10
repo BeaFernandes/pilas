@@ -22,7 +22,7 @@ export default function MainLinks() {
             py={20}
             key="transactions"
             active={active}
-            label="Movimentações"
+            label="Transações"
             icon={<IconArrowsDownUp size="1rem" stroke={2} />}
             /*onClick={() => setActive(true)}*/
           />
