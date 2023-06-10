@@ -27,7 +27,9 @@ export default function ItemsList({ orders }: TransactionsPageProps) {
         <tbody>
           {orders.map((order) =>
             <tr key={order.id}>
-              <td>{moment(order.createdAt).format('lll')}</td>
+              <td>
+                <Text truncate>{moment(order.createdAt).format('lll')}</Text>
+              </td>
               <td>{order.product.name}</td>
               <td>{`${order.productPrice} Pila`.replace('.', ',')}</td>
               <td>{order.amount}</td>

@@ -1,5 +1,7 @@
 import { ApiError, ApiHandleError } from "@/errors/ApiHandleError";
+import { roles } from "@/prisma/seeds/roles";
 import withErrorHandler from "@/utils/api/withErrorHandler";
+import Roles from "@/utils/auth/Roles";
 import { Mayor, User } from "@prisma/client";
 import moment from "moment";
 import { NextApiRequest, NextApiResponse } from "next";
@@ -35,7 +37,33 @@ const handlerFunction = async (
         id: oldMayor?.id,
       },
       data: {
-        endOfMandate: moment(startOfMandate).subtract(1, 'day').format()
+        endOfMandate: moment(startOfMandate).subtract(1, 'day').format(),
+      },
+    })
+
+    await prisma?.user.update({
+      where: {
+        id: oldMayor?.userId,
+      },
+      data: {
+        roles: {
+          disconnect: {
+            id: Roles.MAYOR,
+          }
+        }
+      },
+    })
+
+    await prisma?.user.update({
+      where: {
+        id: user,
+      },
+      data: {
+        roles: {
+          connect: {
+            id: Roles.MAYOR,
+          }
+        }
       },
     })
 
