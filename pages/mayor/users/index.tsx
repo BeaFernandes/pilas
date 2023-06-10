@@ -13,6 +13,7 @@ import axiosApi from '@/services/axiosApi';
 import { notifications } from "@mantine/notifications";
 import { ApiError } from '@/errors/ApiHandleError';
 import { useRouter } from "next/navigation";
+import Link from 'next/link';
 
 export type ComposedUser = User & {
   roles: Array<Role>,
@@ -165,16 +166,16 @@ export default function UsersPage({users, departments}: UsersPageProps) {
       </Head>
       <Group position='apart' c='#112C55' p='sm'>
         <Title order={2}>Usuários</Title>
-        <Button 
-          component="a"
-          href='/mayor/users/balance'
-          fz='md' 
-          variant='gradient' 
-          gradient={{from: '#4AC4F3', to: '#2399EF'}} 
-          radius='xl'
-        >
-        <Text>Gerenciar saldos</Text>
-        </Button>
+        <Link href='/mayor/users/balance' style={{ textDecoration: 'none' }}>
+          <Button
+            fz='md' 
+            variant='gradient' 
+            gradient={{from: '#4AC4F3', to: '#2399EF'}} 
+            radius='xl'
+          >
+            <Text>Gerenciar saldos</Text>
+          </Button>
+        </Link>
       </Group>
 
       <Card padding="xl" radius="sm" shadow='xs'>
