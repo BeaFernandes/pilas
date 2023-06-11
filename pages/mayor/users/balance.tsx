@@ -1,20 +1,18 @@
-import Head from 'next/head';
-import { Button, Card, Checkbox, Drawer, Group, List, NumberInput, PasswordInput, Select, Text, TextInput, Title, TransferList, TransferListData } from '@mantine/core';
+import { Button, Card, Group, List, NumberInput, Text, Title, TransferList, TransferListData } from '@mantine/core';
 import { GetServerSideProps } from 'next';
 import { getServerSession } from 'next-auth';
-import { Department, Role, User } from '@prisma/client';
+import { User } from '@prisma/client';
 import { useSession } from 'next-auth/react';
 import { authOptions } from '@/pages/api/auth/[...nextauth]';
-import { IconAlertTriangleFilled, IconUserPlus } from '@tabler/icons-react';
-import { useDisclosure } from '@mantine/hooks';
+import { IconAlertTriangleFilled } from '@tabler/icons-react';
 import { useForm } from '@mantine/form';
-import ItemsList from './_itemsList';
 import axiosApi from '@/services/axiosApi';
 import { notifications } from "@mantine/notifications";
 import { ApiError } from '@/errors/ApiHandleError';
 import { useRouter } from "next/navigation";
 import { useState } from 'react';
 import Layout from '@/components/Layout';
+import containsRole from '@/utils/auth/containsRole';
 
 interface UsersPageProps {
   users: Array<User>,
@@ -145,13 +143,21 @@ export default function BalancePage({users}: UsersPageProps) {
 export const getServerSideProps: GetServerSideProps = async (context) => {
   const session = await getServerSession(context.req, context.res, authOptions);
 
-  if (!session) {
+  if (
+    !session ||
+    !(
+      (
+        containsRole(session.user, "MAYOR") ||
+        containsRole(session.user, "ADMIN")
+      )
+    )
+  ) {
     return {
       redirect: {
         destination: "/api/auth/signin",
         permanent: false,
       },
-    }
+    };
   }
 
   const users = await prisma?.user.findMany({

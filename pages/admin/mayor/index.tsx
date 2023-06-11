@@ -16,6 +16,7 @@ import ItemsList from './_itemsList';
 import CurrentMayor from '@/components/CurrentMayor';
 import Layout from '@/components/Layout'
 import Roles from '@/utils/auth/Roles';
+import containsRole from '@/utils/auth/containsRole';
 
 export type ComposedMayor = Mayor & {
   user: User,
@@ -178,7 +179,7 @@ export default function MayorPage({mayors, currentMayor, users}: UsersPageProps)
 export const getServerSideProps: GetServerSideProps = async (context) => {
   const session = await getServerSession(context.req, context.res, authOptions);
 
-  if (!session) {
+  if (!session || !containsRole(session.user, 'ADMIN')) {
     return {
       redirect: {
         destination: '/api/auth/signin',

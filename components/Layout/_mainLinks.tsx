@@ -84,7 +84,8 @@ export default function MainLinks({ activeLink }: MainLinksProps) {
         }
         
         {
-          containsRole(session?.user, 'MAYOR') ?
+          containsRole(session?.user, 'MAYOR') || 
+          containsRole(session?.user, "ADMIN") ?
             <NavLink
               py='md'
               label="Prefeito"
