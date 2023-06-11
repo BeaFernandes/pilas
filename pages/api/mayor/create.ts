@@ -1,8 +1,7 @@
 import { ApiError, ApiHandleError } from "@/errors/ApiHandleError";
-import { roles } from "@/prisma/seeds/roles";
 import withErrorHandler from "@/utils/api/withErrorHandler";
 import Roles from "@/utils/auth/Roles";
-import { Mayor, User } from "@prisma/client";
+import { Mayor } from "@prisma/client";
 import moment from "moment";
 import { NextApiRequest, NextApiResponse } from "next";
 
@@ -27,8 +26,22 @@ const handlerFunction = async (
     if (Object.keys(errors).length > 0) throw new ApiHandleError(400, errors)
 
     const oldMayor = await prisma?.mayor.findFirst({
+      include: {
+        user: true,
+      },
       where: {
-        endOfMandate: null,
+        user: {
+          roles: {
+            some: {
+              id: Roles.MAYOR
+            }
+          }
+        },
+        AND: [
+          {
+            endOfMandate: null
+          }
+        ]
       }
     })
 

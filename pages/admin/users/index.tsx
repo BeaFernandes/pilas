@@ -1,4 +1,3 @@
-import Head from 'next/head';
 import { Button, Card, Checkbox, Drawer, Group, List, PasswordInput, Select, Text, TextInput, Title } from '@mantine/core';
 import { GetServerSideProps } from 'next';
 import { getServerSession } from 'next-auth';
@@ -13,6 +12,7 @@ import axiosApi from '@/services/axiosApi';
 import { notifications } from "@mantine/notifications";
 import { ApiError } from '@/errors/ApiHandleError';
 import { useRouter } from "next/navigation";
+import Layout from '@/components/Layout'
 
 export type ComposedUser = User & {
   roles: Array<Role>,
@@ -159,29 +159,27 @@ export default function UsersPage({users, departments}: UsersPageProps) {
         </Drawer.Content>
       </Drawer.Root>
 
-      <Head>
-        <title>Usuários</title>
-        <meta name="viewport" content="minimum-scale=1, initial-scale=1, width=device-width" />
-      </Head>
-      <Group position='apart' c='#112C55' p='sm'>
-        <Title order={2}>Usuários</Title>
-        <Button 
-          onClick={open} 
-          fz='md' 
-          variant='gradient' 
-          gradient={{from: '#4AC4F3', to: '#2399EF'}} 
-          radius='xl'
-        >
-          <Group position='apart'>
-            <IconUserPlus size={20}/> 
-            <Text>Novo</Text>
-          </Group>
-        </Button>
-      </Group>
+      <Layout title='Usuários' activeLink='/admin/users'>
+        <Group position='apart' c='#112C55' p='sm'>
+          <Title order={2}>Usuários</Title>
+          <Button 
+            onClick={open} 
+            fz='md' 
+            variant='gradient' 
+            gradient={{from: '#4AC4F3', to: '#2399EF'}} 
+            radius='xl'
+          >
+            <Group position='apart'>
+              <IconUserPlus size={20}/> 
+              <Text>Novo</Text>
+            </Group>
+          </Button>
+        </Group>
 
-      <Card padding="xl" radius="sm" shadow='xs'>
-        <ItemsList users={users} departments={departments} />
-      </Card>
+        <Card padding="xl" radius="sm" shadow='xs'>
+          <ItemsList users={users} departments={departments} />
+        </Card>
+      </Layout>
     </>
   );
 }
@@ -208,7 +206,7 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
     },
   })
 
-  const departments = await prisma?.department.findMany({})
+  const departments = await prisma?.department.findMany()
 
   return {
     props: {

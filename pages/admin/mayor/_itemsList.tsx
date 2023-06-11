@@ -1,7 +1,5 @@
-import Counter from '@/components/Counter';
-import { Avatar, Button, Flex, Group, Modal, Space, Table, Text, Title, UnstyledButton } from '@mantine/core';
+import { Group, Modal, Table, Text, Title, UnstyledButton } from '@mantine/core';
 import { Mayor, User } from '@prisma/client';
-import { IconStar } from '@tabler/icons-react';
 import moment from 'moment';
 import { useState } from 'react';
 
@@ -61,12 +59,19 @@ export default function ItemsList({mayors}: ItemsPageProps) {
           </tr>
         </thead>
         <tbody>
-          {mayors.map((mayor) =>
-              <tr key={mayor.id}>
-                <td><UnstyledButton fz={14} c='#343434' onClick={() => onModalOpen(mayor)}>{mayor.user.name}</UnstyledButton></td>
-                <td>{moment(mayor.startOfMandate).format('MMMM')}</td>
+          {
+            mayors.length > 0 ?
+              mayors.map((mayor) =>
+                <tr key={mayor.id}>
+                  <td><UnstyledButton fz={14} c='#343434' onClick={() => onModalOpen(mayor)}>{mayor.user.name}</UnstyledButton></td>
+                  <td>{moment(mayor.startOfMandate).format('MMMM')}</td>
+                </tr>
+              )
+            :
+              <tr>
+                <td colSpan={2} align='center'>Ainda não há mandatos</td>
               </tr>
-          )}
+          }
         </tbody>
       </Table>
     </>

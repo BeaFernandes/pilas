@@ -12,13 +12,21 @@ import {
 import MainLinks from './_mainLinks'
 import User from './_user';
 import { useSession } from 'next-auth/react';
+import Head from 'next/head';
+import Link from 'next/link';
+import { GetServerSideProps } from 'next';
+import { getServerSession } from 'next-auth';
+import { authOptions } from '@/pages/api/auth/[...nextauth]';
+import containsRole from '@/utils/auth/containsRole';
 
 
 interface PageLayoutProps {
-  children: ReactNode
+  children: ReactNode,
+  title: string,
+  activeLink: string,
 }
 
-export default function AppShellDemo({children}: PageLayoutProps) {
+export default function Layout({children, title, activeLink}: PageLayoutProps) {
   const theme = useMantineTheme();
   const [opened, setOpened] = useState(false);
   const { data: session, status } = useSession();
@@ -35,7 +43,7 @@ export default function AppShellDemo({children}: PageLayoutProps) {
       navbar={
         <Navbar hiddenBreakpoint="sm" hidden={!opened} width={{ sm: 200, lg: 300 }}>
           <Navbar.Section grow mt="xs">
-            <MainLinks />
+            <MainLinks activeLink={activeLink} />
           </Navbar.Section>
           <Navbar.Section>
             <User userName={session?.user.name} userEmail={session?.user.email}/>
@@ -43,9 +51,11 @@ export default function AppShellDemo({children}: PageLayoutProps) {
         </Navbar>
       }
       header={
-        <Header height={65} px="md" pt={0} pb={0}>
+        <Header height={65} px="md"py={0}>
           <Group sx={{ height: '100%' }} position="apart">
-            <Image maw={80} src="/Logo.png" ml='md' alt="Logo da Act" withPlaceholder/>
+            <Link href='/'>
+              <Image maw={80} src="/Logo.png" ml='md' alt="Logo da Act" withPlaceholder/>
+            </Link>
 
             <MediaQuery largerThan="sm" styles={{ display: 'none' }}>
               <Burger
@@ -61,6 +71,10 @@ export default function AppShellDemo({children}: PageLayoutProps) {
         </Header>
       }
     >
+      <Head>
+        <title>{title}</title>
+        <meta name="viewport" content="minimum-scale=1, initial-scale=1, width=device-width" />
+      </Head>
       {children}
     </AppShell>
   );

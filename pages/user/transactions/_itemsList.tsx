@@ -1,4 +1,4 @@
-import { Table, Text, UnstyledButton } from '@mantine/core';
+import { Table, Text } from '@mantine/core';
 import { Order, Product } from '@prisma/client';
 import moment from 'moment';
 
@@ -25,17 +25,24 @@ export default function ItemsList({ orders }: TransactionsPageProps) {
           </tr>
         </thead>
         <tbody>
-          {orders.map((order) =>
-            <tr key={order.id}>
-              <td>
-                <Text truncate>{moment(order.createdAt).format('lll')}</Text>
-              </td>
-              <td>{order.product.name}</td>
-              <td>{`${order.productPrice} Pila`.replace('.', ',')}</td>
-              <td>{order.amount}</td>
-              <td>{`${order.amount*order.productPrice} Pila`.replace('.', ',')}</td>
-            </tr>  
-          )}
+          {
+            orders.length > 0 ?
+              orders.map((order) =>
+                <tr key={order.id}>
+                  <td>
+                    <Text truncate>{moment(order.createdAt).format('lll')}</Text>
+                  </td>
+                  <td>{order.product.name}</td>
+                  <td>{`${order.productPrice} Pila`.replace('.', ',')}</td>
+                  <td>{order.amount}</td>
+                  <td>{`${order.amount*order.productPrice} Pila`.replace('.', ',')}</td>
+                </tr>  
+              )
+            :
+              <tr>
+                <td colSpan={5} align='center'>Ainda não há transações</td>
+              </tr>
+          }
         </tbody>
       </Table>
     </>

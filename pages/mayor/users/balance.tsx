@@ -14,6 +14,7 @@ import { notifications } from "@mantine/notifications";
 import { ApiError } from '@/errors/ApiHandleError';
 import { useRouter } from "next/navigation";
 import { useState } from 'react';
+import Layout from '@/components/Layout';
 
 interface UsersPageProps {
   users: Array<User>,
@@ -92,52 +93,51 @@ export default function BalancePage({users}: UsersPageProps) {
 
   return (
     <>
-      <Head>
-        <title>Pilas</title>
-        <meta name="viewport" content="minimum-scale=1, initial-scale=1, width=device-width" />
-      </Head>
-      <Group position='apart' c='#112C55' p='sm'>
-        <Title order={2}>Pilas</Title>
-      </Group>
+      <Layout title='Gerenciar Pilas' activeLink='/mayor/users/balance'>
+        <Group position='apart' c='#112C55' p='sm'>
+          <Title order={2}>Pilas</Title>
+        </Group>
 
-      <Card padding="xl" radius="sm" shadow='xs'>
-        <form onSubmit={form.onSubmit(() => handleSubmit())}>
-          <TransferList
-            searchPlaceholder="Procurar..."
-            nothingFound="Nenhum usuário aqui"
-            titles={['Usuários disponíveis', 'Atribuir Pilas para...']}
-            breakpoint="sm"
-            {...form.getInputProps('users')}
-          />
-
-          <Group position='right' my='md'>
-            <NumberInput
-              defaultValue={0}
-              parser={(value) => value.replace(/\$\s?|(,*)/g, '')}
-              formatter={(value) =>
-                !Number.isNaN(parseFloat(value))
-                  ? `${value} Pila`.replace(/\B(?<!\.\d*)(?=(\d{3})+(?!\d))/g, ',')
-                  : ' Pila'
-              }
-              hideControls
-              decimalSeparator=","
-              precision={2}
-              step={0.25}
-              {...form.getInputProps('balance')}
-              radius='xl'
+        <Card padding="xl" radius="sm" shadow='xs'>
+          <form onSubmit={form.onSubmit(() => handleSubmit())}>
+            <TransferList
+              searchPlaceholder="Procurar..."
+              nothingFound="Nenhum usuário aqui"
+              titles={['Usuários disponíveis', 'Atribuir Pilas para...']}
+              breakpoint="sm"
+              {...form.getInputProps('users')}
             />
-            <Button 
-              fz='md' 
-              variant='gradient' 
-              gradient={{from: '#4AC4F3', to: '#2399EF'}} 
-              radius='xl'
-              type='submit'
-            >
-              Atribuir
-            </Button>
-          </Group>
-        </form>
-      </Card>
+
+            <Group position='right' my='md'>
+              <NumberInput
+                defaultValue={0}
+                parser={(value) => value.replace(/\$\s?|(,*)/g, '')}
+                formatter={(value) =>
+                  !Number.isNaN(parseFloat(value))
+                    ? `${value} Pila`.replace(/\B(?<!\.\d*)(?=(\d{3})+(?!\d))/g, ',')
+                    : ' Pila'
+                }
+                hideControls
+                decimalSeparator=","
+                precision={2}
+                step={0.25}
+                {...form.getInputProps('balance')}
+                radius='xl'
+              />
+              <Button 
+                fz='md' 
+                variant='gradient' 
+                gradient={{from: '#4AC4F3', to: '#2399EF'}} 
+                radius='xl'
+                type='submit'
+              >
+                Atribuir
+              </Button>
+            </Group>
+          </form>
+        </Card>
+      </Layout>
+    
     </>
   );
 }

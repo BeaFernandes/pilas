@@ -1,5 +1,4 @@
-import Head from 'next/head';
-import { Alert, Button, Card, Drawer, Group, List, Select, Text, Title } from '@mantine/core';
+import { Button, Card, Drawer, Group, List, Select, Text, Title } from '@mantine/core';
 import { DateInput } from '@mantine/dates';
 import { GetServerSideProps } from 'next';
 import { getServerSession } from 'next-auth';
@@ -15,7 +14,8 @@ import { ApiError } from '@/errors/ApiHandleError';
 import { useRouter } from 'next/navigation';
 import ItemsList from './_itemsList';
 import CurrentMayor from '@/components/CurrentMayor';
-import { IconAlertCircle } from '@tabler/icons-react';
+import Layout from '@/components/Layout'
+import Roles from '@/utils/auth/Roles';
 
 export type ComposedMayor = Mayor & {
   user: User,
@@ -142,38 +142,35 @@ export default function MayorPage({mayors, currentMayor, users}: UsersPageProps)
         </Drawer.Content>
       </Drawer.Root>
 
-      <Head>
-        <title>Prefeitos</title>
-        <meta name='viewport' content='minimum-scale=1, initial-scale=1, width=device-width' />
-      </Head>
+      <Layout title='Prefeitos' activeLink='/admin/mayor'>
+        <Group position='apart' c='#112C55' p='sm'>
+          <Title order={2} >Prefeito atual</Title>
+          <Button 
+            onClick={open} 
+            fz='md' 
+            variant='gradient' 
+            gradient={{from: '#4AC4F3', to: '#2399EF'}} 
+            radius='xl'
+          >
+            <Group position='apart'>
+              <IconUserStar size={20}/> 
+              <Text>Trocar prefeito</Text>
+            </Group>
+          </Button>
+        </Group>
 
-      <Group position='apart' c='#112C55' p='sm'>
-        <Title order={2} >Prefeito atual</Title>
-        <Button 
-          onClick={open} 
-          fz='md' 
-          variant='gradient' 
-          gradient={{from: '#4AC4F3', to: '#2399EF'}} 
-          radius='xl'
-        >
-          <Group position='apart'>
-            <IconUserStar size={20}/> 
-            <Text>Trocar prefeito</Text>
-          </Group>
-        </Button>
-      </Group>
+        <Card padding='xl' radius='sm' shadow='xs' c='#343434'>
+          <CurrentMayor currentMayor={currentMayor} />
+        </Card>
 
-      <Card padding='xl' radius='sm' shadow='xs' c='#343434'>
-        <CurrentMayor currentMayor={currentMayor} />
-      </Card>
+        <Group position='apart' c='#112C55'>
+          <Title order={2} p='sm'>Mandatos anteriores</Title>
+        </Group>
 
-      <Group position='apart' c='#112C55'>
-        <Title order={2} p='sm'>Mandatos anteriores</Title>
-      </Group>
-
-      <Card padding='xl' radius='sm' shadow='xs'>
-        <ItemsList mayors={mayors}/>
-      </Card>
+        <Card padding='xl' radius='sm' shadow='xs'>
+          <ItemsList mayors={mayors}/>
+        </Card>
+      </Layout>
     </>
   );
 }
@@ -195,7 +192,13 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
       user: true,
     },
     where: {
-      endOfMandate: null,
+      user: {
+        roles: {
+          some: {
+            id: Roles.MAYOR
+          }
+        }
+      }
     },
   })
 

@@ -1,14 +1,11 @@
 import { GetServerSideProps } from "next";
 import { getServerSession } from "next-auth";
 import { useSession } from "next-auth/react";
-import { signOut } from "next-auth/react";
-import Link from "next/link";
 import { authOptions } from "../../api/auth/[...nextauth]";
-import Head from "next/head";
-import { Button, Card, Group, Text, Title } from "@mantine/core";
-import { IconUserPlus } from "@tabler/icons-react";
+import { Card, Group, Text, Title } from "@mantine/core";
 import ItemsList from "./_itemsList";
 import { Order, Product } from "@prisma/client";
+import Layout from "@/components/Layout";
 
 export type ComposedOrder = Order & {
   product: Product,
@@ -29,20 +26,18 @@ export default function Transactions({ orders, currentUser }: TransactionsPagePr
 
   return (
     <>
-      <Head>
-        <title>Transações</title>
-        <meta name="viewport" content="minimum-scale=1, initial-scale=1, width=device-width" />
-      </Head>
-      <Group position='apart' c='#112C55' p='sm'>
-        <Title order={2}>Transações</Title>
-        <Text>
-          Seu saldo:<Text fw='bold' fz='xl' span> {currentUser?.balance} Pila</Text>
-        </Text>
-      </Group>
+      <Layout title='Transações' activeLink='/user/transactions'>
+        <Group position='apart' c='#112C55' p='sm'>
+          <Title order={2}>Transações</Title>
+          <Text>
+            Seu saldo:<Text fw='bold' fz='xl' span> {currentUser?.balance} Pila</Text>
+          </Text>
+        </Group>
 
-      <Card padding="xl" radius="sm" shadow='xs'>
-        <ItemsList orders={orders} />
-      </Card>
+        <Card padding="xl" radius="sm" shadow='xs'>
+          <ItemsList orders={orders} />
+        </Card>
+      </Layout>
     </>
   )
 }

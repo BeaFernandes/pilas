@@ -21,9 +21,7 @@ export default function App({
       <SessionProvider session={session}>
         <DatesProvider settings={{ locale: 'pt-br' }}>
           <Notifications />
-          <Layout>
             <Component {...pageProps} />
-          </Layout>
         </DatesProvider>
       </SessionProvider>
     </MantineProvider>  

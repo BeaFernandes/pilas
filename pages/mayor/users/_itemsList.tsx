@@ -233,14 +233,21 @@ export default function ItemsList({users, departments}: ProductsPageProps) {
           </tr>
         </thead>
         <tbody>
-          {users.map((user) =>
-              <tr key={user.id}>
-                <td><UnstyledButton fz={14} c='#343434' onClick={() => onDrawerOpen(user)}><Text truncate>{user.name}</Text></UnstyledButton></td>
-                <td><Text>{`${user.balance} Pila`.replace('.', ',')}</Text></td>
-                <td>{user.email}</td>
-                <td>{user.department.name}</td>
+          {
+            users.length > 0 ?
+              users.map((user) =>
+                <tr key={user.id}>
+                  <td><UnstyledButton fz={14} c='#343434' onClick={() => onDrawerOpen(user)}><Text truncate>{user.name}</Text></UnstyledButton></td>
+                  <td><Text>{`${user.balance} Pila`.replace('.', ',')}</Text></td>
+                  <td>{user.email}</td>
+                  <td>{user.department.name}</td>
+                </tr>
+              )
+            :
+              <tr>
+                <td colSpan={4} align='center'>Ainda não há usuários</td>
               </tr>
-          )}
+          }
         </tbody>
       </Table>
     </>
