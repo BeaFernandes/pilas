@@ -12,13 +12,16 @@ import {
 import MainLinks from './_mainLinks'
 import User from './_user';
 import { useSession } from 'next-auth/react';
+import Head from 'next/head';
 
 
 interface PageLayoutProps {
-  children: ReactNode
+  children: ReactNode,
+  title: string,
+  activeLink: string,
 }
 
-export default function AppShellDemo({children}: PageLayoutProps) {
+export default function AppShellDemo({children, title, activeLink}: PageLayoutProps) {
   const theme = useMantineTheme();
   const [opened, setOpened] = useState(false);
   const { data: session, status } = useSession();
@@ -35,7 +38,7 @@ export default function AppShellDemo({children}: PageLayoutProps) {
       navbar={
         <Navbar hiddenBreakpoint="sm" hidden={!opened} width={{ sm: 200, lg: 300 }}>
           <Navbar.Section grow mt="xs">
-            <MainLinks />
+            <MainLinks activeLink={activeLink} />
           </Navbar.Section>
           <Navbar.Section>
             <User userName={session?.user.name} userEmail={session?.user.email}/>
@@ -61,6 +64,10 @@ export default function AppShellDemo({children}: PageLayoutProps) {
         </Header>
       }
     >
+      <Head>
+        <title>{title}</title>
+        <meta name="viewport" content="minimum-scale=1, initial-scale=1, width=device-width" />
+      </Head>
       {children}
     </AppShell>
   );

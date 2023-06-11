@@ -3,7 +3,11 @@ import { NavLink } from "@mantine/core";
 import { IconArrowsDownUp, IconHome, IconMilk, IconUserStar, IconUsers } from "@tabler/icons-react";
 import Link from "next/link";
 
-export default function MainLinks() {
+interface MainLinksProps {
+  activeLink: string,
+}
+
+export default function MainLinks({ activeLink }: MainLinksProps) {
   const [active, setActive] = useState(false);
   return (
       <>
@@ -32,7 +36,7 @@ export default function MainLinks() {
           <NavLink
             py={20}
             key="users"
-            active={active}
+            active={activeLink == '/admin/users'}
             label="Gerenciar Usuários"
             icon={<IconUsers size="1rem" stroke={2} />}
             /*onClick={() => setActive(true)}*/
