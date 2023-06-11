@@ -137,7 +137,7 @@ export default function ItemsList({products, currentUser}: ProductsPageProps) {
         striped
         captionSide='top'
       >
-        <caption>Clique sob o nome de um produto para comprar</caption>
+        <caption>Clique sobre o nome de um produto para comprar</caption>
         <tbody>
           {
             products.length > 0 ?

@@ -14,6 +14,7 @@ import { ApiError } from '@/errors/ApiHandleError';
 import { useRouter } from "next/navigation";
 import { useState } from 'react';
 import Layout from '@/components/Layout';
+import containsRole from '@/utils/auth/containsRole';
 
 interface ProductsPageProps {
   products: Array<Product>,
@@ -193,13 +194,21 @@ export default function ProductsPage({products}: ProductsPageProps) {
 export const getServerSideProps: GetServerSideProps = async (context) => {
   const session = await getServerSession(context.req, context.res, authOptions);
 
-  if (!session) {
+  if (
+    !session ||
+    !(
+      (
+        containsRole(session.user, "MAYOR") ||
+        containsRole(session.user, "ADMIN")
+      )
+    )
+  ) {
     return {
       redirect: {
         destination: "/api/auth/signin",
         permanent: false,
       },
-    }
+    };
   }
 
   const products = await prisma?.product.findMany({

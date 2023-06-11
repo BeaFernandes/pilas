@@ -12,6 +12,7 @@ import { useForm } from "@mantine/form";
 import { notifications } from "@mantine/notifications";
 import { ApiError } from "@/errors/ApiHandleError";
 import Layout from "@/components/Layout";
+import moment from "moment";
 
 export type ComposedUser = User & {
   department: Department,
@@ -34,7 +35,7 @@ export default function UserPage({ currentUser }: UserPageProps) {
   });
 
   const rolesData = roles.map((role) => {
-    return role.title
+    return role.title == 'MAYOR' ? 'PREFEITO' : role.title
   })
 
   const handleSubmit = async () => {
@@ -137,9 +138,8 @@ export default function UserPage({ currentUser }: UserPageProps) {
               <IconUser size='2rem' />
             </Avatar>
             <Title order={3}>{currentUser?.name}</Title>
+            <Text c='#9A9A9A'>Por aqui desde {moment(currentUser?.createdAt).format('LL')}</Text>
           </Flex>
-
-          <Divider my='lg'/>
 
           <Group position='apart' align='end' m='lg'>
             <Flex
@@ -159,16 +159,19 @@ export default function UserPage({ currentUser }: UserPageProps) {
             </Anchor>
           </Group>
 
-          <MultiSelect 
-            label='Papéis' 
-            defaultValue={rolesData} 
-            data={rolesData} 
-            placeholder="Nenhum papel..."
-            readOnly
-            radius='xl'
-            m='lg'
-            sx={roles.length <= 0 ? {display: 'none'} : {display: 'block'}} 
-          />
+          <Group position='left'>
+            <MultiSelect 
+              label='Papéis'
+              defaultValue={rolesData} 
+              data={rolesData} 
+              placeholder="Nenhum papel..."
+              readOnly
+              radius='xl'
+              m='lg'
+              variant=''
+              sx={roles.length <= 0 ? {display: 'none'} : {display: 'block'}} 
+            />
+          </Group>
           
         </Card>
       </Layout>
