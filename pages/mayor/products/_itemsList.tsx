@@ -1,12 +1,12 @@
-import { Anchor, Button, Checkbox, Container, Drawer, Group, List, Modal, NumberInput, PasswordInput, ScrollArea, Select, Table, Text, TextInput, UnstyledButton } from '@mantine/core';
-import { Department, Product, Role, User } from "@prisma/client";
+import { Button, Checkbox, Drawer, Group, List, NumberInput, Table, Text, TextInput, UnstyledButton } from '@mantine/core';
+import { Product } from "@prisma/client";
 import { IconAlertTriangleFilled } from "@tabler/icons-react";
 import { useForm } from '@mantine/form';
 import { ApiError } from '@/errors/ApiHandleError';
 import axiosApi from '@/services/axiosApi';
 import { notifications } from "@mantine/notifications";
 import { useRouter } from "next/navigation";
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import moment from 'moment';
 
 interface ProductsPageProps {
@@ -179,15 +179,22 @@ export default function ItemsList({products}: ProductsPageProps) {
           </tr>
         </thead>
         <tbody>
-          {products.map((product) =>
-              <tr key={product.id}>
-                <td><UnstyledButton fz={14} c='#343434' onClick={() => onDrawerOpen(product)}><Text truncate>{product.name}</Text></UnstyledButton></td>
-                <td>{product.price} Pila</td>
-                <td>{product.amount}</td>
-                <td>{product.active ? 'Ativo' : 'Inativo'}</td>
-                <td><Text truncate>{moment(product.updatedAt).format('lll')}</Text></td>
+          {
+            products.length > 0 ?
+              products.map((product) =>
+                <tr key={product.id}>
+                  <td><UnstyledButton fz={14} c='#343434' onClick={() => onDrawerOpen(product)}><Text truncate>{product.name}</Text></UnstyledButton></td>
+                  <td>{product.price} Pila</td>
+                  <td>{product.amount}</td>
+                  <td>{product.active ? 'Ativo' : 'Inativo'}</td>
+                  <td><Text truncate>{moment(product.updatedAt).format('lll')}</Text></td>
+                </tr>
+              )
+            :
+              <tr>
+                <td colSpan={5} align='center'>Ainda não há produtos</td>
               </tr>
-          )}
+          }
         </tbody>
       </Table>
     </>

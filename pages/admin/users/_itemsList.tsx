@@ -1,4 +1,4 @@
-import { Anchor, Button, Checkbox, Container, Drawer, Group, List, Modal, PasswordInput, Select, Table, Text, TextInput, UnstyledButton } from '@mantine/core';
+import { Anchor, Button, Checkbox, Drawer, Group, List, Modal, PasswordInput, Select, Table, Text, TextInput, UnstyledButton } from '@mantine/core';
 import { Department, Role, User } from "@prisma/client";
 import { IconAlertTriangleFilled } from "@tabler/icons-react";
 import { useForm } from '@mantine/form';
@@ -8,7 +8,6 @@ import { notifications } from "@mantine/notifications";
 import { useRouter } from "next/navigation";
 import { useState } from 'react';
 import containsRole from '@/utils/auth/containsRole';
-import { useDisclosure } from '@mantine/hooks';
 import moment from 'moment';
 
 export type ComposedUser = User & {
@@ -260,14 +259,21 @@ export default function ItemsList({users, departments}: ProductsPageProps) {
           </tr>
         </thead>
         <tbody>
-          {users.map((user) =>
-              <tr key={user.id}>
-                <td><UnstyledButton fz={14} c='#343434' onClick={() => onDrawerOpen(user)}>{user.name}</UnstyledButton></td>
-                <td>{user.email}</td>
-                <td>{user.department.name}</td>
-                <td>{user.active? 'Ativo' : 'Inativo'}</td>
+          {
+            users.length > 0 ?
+              users.map((user) =>
+                <tr key={user.id}>
+                  <td><UnstyledButton fz={14} c='#343434' onClick={() => onDrawerOpen(user)}>{user.name}</UnstyledButton></td>
+                  <td>{user.email}</td>
+                  <td>{user.department.name}</td>
+                  <td>{user.active? 'Ativo' : 'Inativo'}</td>
+                </tr>
+              )
+            :
+              <tr>
+                <td colSpan={4} align='center'>Ainda não há usuários</td>
               </tr>
-          )}
+          }
         </tbody>
       </Table>
     </>

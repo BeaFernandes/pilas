@@ -3,7 +3,6 @@ import { getServerSession } from "next-auth";
 import { useSession } from "next-auth/react";
 import { authOptions } from "../api/auth/[...nextauth]";
 import { Department, Role, User } from "@prisma/client";
-import Head from "next/head";
 import { Anchor, Avatar, Button, Card, Divider, Flex, Group, List, Modal, MultiSelect, PasswordInput, Text, Title } from "@mantine/core";
 import { IconAlertTriangleFilled } from "@tabler/icons-react";
 import { IconUser } from "@tabler/icons-react";
@@ -12,6 +11,7 @@ import { useDisclosure } from "@mantine/hooks";
 import { useForm } from "@mantine/form";
 import { notifications } from "@mantine/notifications";
 import { ApiError } from "@/errors/ApiHandleError";
+import Layout from "@/components/Layout";
 
 export type ComposedUser = User & {
   department: Department,
@@ -118,61 +118,61 @@ export default function UserPage({ currentUser }: UserPageProps) {
           </Group>
         </form>
       </Modal>
-      <Head>
-        <title>Meu perfil</title>
-        <meta name="viewport" content="minimum-scale=1, initial-scale=1, width=device-width" />
-      </Head>
-      <Group position='apart' c='#112C55' p='sm'>
-        <Title order={2}>Meu perfil</Title>
-      </Group>
+      
+      <Layout title='Minha conta' activeLink=''>
+        <Group position='apart' c='#112C55' p='sm'>
+          <Title order={2}>Meu perfil</Title>
+        </Group>
 
-      <Card padding="xl" radius="sm" shadow='xs'  c='#343434'>
-        <Flex
-          mih={50}
-          gap='xl'
-          justify='flex-start'
-          align='center'
-          direction='column'
-          wrap='wrap'
-        >
-          <Avatar color='blue' radius='xl' size='lg'>
-            <IconUser size='2rem' />
-          </Avatar>
-          <Title order={3}>{currentUser?.name}</Title>
-        </Flex>
-
-        <Divider my='lg'/>
-
-        <Group position='apart' align='end' m='lg'>
+        <Card padding="xl" radius="sm" shadow='xs'  c='#343434'>
           <Flex
-            gap='sm'
+            mih={50}
+            gap='xl'
             justify='flex-start'
-            align='flex-start'
+            align='center'
             direction='column'
             wrap='wrap'
           >
-            <Title order={3}>{currentUser?.department.name}</Title>
-            <Text><Text fw='bold' span>E-mail: </Text>{currentUser?.email}</Text>
-            <Text><Text fw='bold' span>Saldo em pilas: </Text>{`${currentUser.balance} Pila`.replace('.', ',')}</Text>
+            <Avatar color='blue' radius='xl' size='lg'>
+              <IconUser size='2rem' />
+            </Avatar>
+            <Title order={3}>{currentUser?.name}</Title>
           </Flex>
 
-          <Anchor fz='sm' c='#9A9A9A' onClick={() => open()} td='underline'>
-            Trocar senha
-          </Anchor>
-        </Group>
+          <Divider my='lg'/>
 
-        <MultiSelect 
-          label='Papéis' 
-          defaultValue={rolesData} 
-          data={rolesData} 
-          placeholder="Nenhum papel..."
-          readOnly
-          radius='xl'
-          m='lg'
-          sx={roles.length <= 0 ? {display: 'none'} : {display: 'block'}} 
-        />
-        
-      </Card>
+          <Group position='apart' align='end' m='lg'>
+            <Flex
+              gap='sm'
+              justify='flex-start'
+              align='flex-start'
+              direction='column'
+              wrap='wrap'
+            >
+              <Title order={3}>{currentUser?.department.name}</Title>
+              <Text><Text fw='bold' span>E-mail: </Text>{currentUser?.email}</Text>
+              <Text><Text fw='bold' span>Saldo em pilas: </Text>{`${currentUser.balance} Pila`.replace('.', ',')}</Text>
+            </Flex>
+
+            <Anchor fz='sm' c='#9A9A9A' onClick={() => open()} td='underline'>
+              Trocar senha
+            </Anchor>
+          </Group>
+
+          <MultiSelect 
+            label='Papéis' 
+            defaultValue={rolesData} 
+            data={rolesData} 
+            placeholder="Nenhum papel..."
+            readOnly
+            radius='xl'
+            m='lg'
+            sx={roles.length <= 0 ? {display: 'none'} : {display: 'block'}} 
+          />
+          
+        </Card>
+      </Layout>
+
     </>
   );
 }

@@ -24,11 +24,17 @@ export default function CurrentMayor ({currentMayor}: CurrentMomentProps) {
       <Avatar color='blue' radius='xl' size='lg'>
         <IconCrown size='2rem' />
       </Avatar>
-      <Title order={3}>{currentMayor?.user.name}</Title>
-      <Text c='#9A9A9A'>
-        <Text fw='bold' span c='#343434'>Início do mandato: </Text> 
-        {moment(currentMayor?.startOfMandate).format('LL')}
-      </Text>
+      <Title order={3}>{currentMayor ? currentMayor.user.name : 'Não localizamos o prefeito'}</Title>
+      {
+        currentMayor ? 
+          <Text c='#9A9A9A'>
+            <Text fw='bold' span c='#343434'>Início do mandato: </Text> 
+            {moment(currentMayor?.startOfMandate).format('LL')}
+          </Text>
+        :
+        <></>
+      }
+        
     </Flex>
   )
 }

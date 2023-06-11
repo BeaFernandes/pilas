@@ -130,14 +130,28 @@ export default function ItemsList({products, currentUser}: ProductsPageProps) {
         </Modal.Content>
       </Modal.Root>
 
-      <Table highlightOnHover verticalSpacing='sm' c='#343434' striped>
+      <Table 
+        highlightOnHover 
+        verticalSpacing='sm' 
+        c='#343434' 
+        striped
+        captionSide='top'
+      >
+        <caption>Clique sob o nome de um produto para comprar</caption>
         <tbody>
-          {products.map((product) =>
-            <tr key={product.id}>
-              <td><UnstyledButton fz={14} c='#343434' onClick={() => onModalOpen(product)}>{product.name}</UnstyledButton></td>
-              <td>{product.price} Pila</td>
-            </tr>  
-          )}
+          {
+            products.length > 0 ?
+              products.map((product) =>
+                <tr key={product.id}>
+                  <td><UnstyledButton fz={14} c='#343434' onClick={() => onModalOpen(product)}>{product.name}</UnstyledButton></td>
+                  <td>{product.price} Pila</td>
+                </tr>  
+              )
+            :
+              <tr>
+                <td colSpan={2} align='center'>Ainda não há produtos</td>
+              </tr>
+          }
         </tbody>
       </Table>
     </>

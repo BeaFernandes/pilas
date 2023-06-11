@@ -1,11 +1,10 @@
-import Head from 'next/head';
-import { Button, Card, Checkbox, Drawer, Group, List, NumberInput, PasswordInput, Select, Text, TextInput, Title } from '@mantine/core';
+import { Button, Card, Drawer, Group, List, NumberInput, Select, Text, Title } from '@mantine/core';
 import { GetServerSideProps } from 'next';
 import { getServerSession } from 'next-auth';
-import { Department, Product, Role, User } from '@prisma/client';
+import { Product } from '@prisma/client';
 import { useSession } from 'next-auth/react';
 import { authOptions } from '@/pages/api/auth/[...nextauth]';
-import { IconAlertTriangleFilled, IconMilk, IconPlus, IconSelect, IconSelector, IconUserPlus } from '@tabler/icons-react';
+import { IconAlertTriangleFilled, IconPlus } from '@tabler/icons-react';
 import { useDisclosure } from '@mantine/hooks';
 import { useForm } from '@mantine/form';
 import ItemsList from './_itemsList';
@@ -13,9 +12,8 @@ import axiosApi from '@/services/axiosApi';
 import { notifications } from "@mantine/notifications";
 import { ApiError } from '@/errors/ApiHandleError';
 import { useRouter } from "next/navigation";
-import { notEqual } from 'assert';
-import { useEffect, useState } from 'react';
-import theme from '@/config/theme';
+import { useState } from 'react';
+import Layout from '@/components/Layout';
 
 interface ProductsPageProps {
   products: Array<Product>,
@@ -167,29 +165,27 @@ export default function ProductsPage({products}: ProductsPageProps) {
         </Drawer.Content>
       </Drawer.Root>
 
-      <Head>
-        <title>Produtos</title>
-        <meta name="viewport" content="minimum-scale=1, initial-scale=1, width=device-width" />
-      </Head>
-      <Group position='apart' c='#112C55' p='sm'>
-        <Title order={2}>Produtos</Title>
-        <Button 
-          onClick={open} 
-          fz='md' 
-          variant='gradient' 
-          gradient={{from: '#4AC4F3', to: '#2399EF'}} 
-          radius='xl'
-        >
-          <Group position='apart'>
-            <IconPlus size={20}/> 
-            <Text>Novo</Text>
-          </Group>
-        </Button>
-      </Group>
+      <Layout title='Produtos' activeLink='/mayor/products'>
+        <Group position='apart' c='#112C55' p='sm'>
+          <Title order={2}>Produtos</Title>
+          <Button 
+            onClick={open} 
+            fz='md' 
+            variant='gradient' 
+            gradient={{from: '#4AC4F3', to: '#2399EF'}} 
+            radius='xl'
+          >
+            <Group position='apart'>
+              <IconPlus size={20}/> 
+              <Text>Novo</Text>
+            </Group>
+          </Button>
+        </Group>
 
-      <Card padding="xl" radius="sm" shadow='xs'>
-        <ItemsList products={products} />
-      </Card>
+        <Card padding="xl" radius="sm" shadow='xs'>
+          <ItemsList products={products} />
+        </Card>
+      </Layout>
     </>
   )
 }

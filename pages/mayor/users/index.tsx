@@ -1,11 +1,10 @@
-import Head from 'next/head';
-import { Anchor, Button, Card, Checkbox, Drawer, Group, List, PasswordInput, Select, Text, TextInput, Title } from '@mantine/core';
+import { Button, Card, Checkbox, Drawer, Group, List, PasswordInput, Select, Text, TextInput, Title } from '@mantine/core';
 import { GetServerSideProps } from 'next';
 import { getServerSession } from 'next-auth';
 import { Department, Role, User } from '@prisma/client';
 import { useSession } from 'next-auth/react';
 import { authOptions } from '@/pages/api/auth/[...nextauth]';
-import { IconAlertTriangleFilled, IconUserPlus } from '@tabler/icons-react';
+import { IconAlertTriangleFilled } from '@tabler/icons-react';
 import { useDisclosure } from '@mantine/hooks';
 import { useForm } from '@mantine/form';
 import ItemsList from './_itemsList';
@@ -14,6 +13,7 @@ import { notifications } from "@mantine/notifications";
 import { ApiError } from '@/errors/ApiHandleError';
 import { useRouter } from "next/navigation";
 import Link from 'next/link';
+import Layout from '@/components/Layout';
 
 export type ComposedUser = User & {
   roles: Array<Role>,
@@ -160,27 +160,25 @@ export default function UsersPage({users, departments}: UsersPageProps) {
         </Drawer.Content>
       </Drawer.Root>
 
-      <Head>
-        <title>Usuários</title>
-        <meta name="viewport" content="minimum-scale=1, initial-scale=1, width=device-width" />
-      </Head>
-      <Group position='apart' c='#112C55' p='sm'>
-        <Title order={2}>Usuários</Title>
-        <Link href='/mayor/users/balance' style={{ textDecoration: 'none' }}>
-          <Button
-            fz='md' 
-            variant='gradient' 
-            gradient={{from: '#4AC4F3', to: '#2399EF'}} 
-            radius='xl'
-          >
-            <Text>Gerenciar saldos</Text>
-          </Button>
-        </Link>
-      </Group>
+      <Layout title='Usuários' activeLink='/mayor/users'>
+        <Group position='apart' c='#112C55' p='sm'>
+          <Title order={2}>Usuários</Title>
+          <Link href='/mayor/users/balance' style={{ textDecoration: 'none' }}>
+            <Button
+              fz='md' 
+              variant='gradient' 
+              gradient={{from: '#4AC4F3', to: '#2399EF'}} 
+              radius='xl'
+            >
+              <Text>Gerenciar saldos</Text>
+            </Button>
+          </Link>
+        </Group>
 
-      <Card padding="xl" radius="sm" shadow='xs'>
-        <ItemsList users={users} departments={departments} />
-      </Card>
+        <Card padding="xl" radius="sm" shadow='xs'>
+          <ItemsList users={users} departments={departments} />
+        </Card>
+      </Layout>
     </>
   )
 }
@@ -213,7 +211,7 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
     },
   })
 
-  const departments = await prisma?.department.findMany({})
+  const departments = await prisma?.department.findMany()
 
   return {
     props: {

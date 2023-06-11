@@ -13,6 +13,11 @@ import MainLinks from './_mainLinks'
 import User from './_user';
 import { useSession } from 'next-auth/react';
 import Head from 'next/head';
+import Link from 'next/link';
+import { GetServerSideProps } from 'next';
+import { getServerSession } from 'next-auth';
+import { authOptions } from '@/pages/api/auth/[...nextauth]';
+import containsRole from '@/utils/auth/containsRole';
 
 
 interface PageLayoutProps {
@@ -21,7 +26,7 @@ interface PageLayoutProps {
   activeLink: string,
 }
 
-export default function AppShellDemo({children, title, activeLink}: PageLayoutProps) {
+export default function Layout({children, title, activeLink}: PageLayoutProps) {
   const theme = useMantineTheme();
   const [opened, setOpened] = useState(false);
   const { data: session, status } = useSession();
@@ -46,9 +51,11 @@ export default function AppShellDemo({children, title, activeLink}: PageLayoutPr
         </Navbar>
       }
       header={
-        <Header height={65} px="md" pt={0} pb={0}>
+        <Header height={65} px="md"py={0}>
           <Group sx={{ height: '100%' }} position="apart">
-            <Image maw={80} src="/Logo.png" ml='md' alt="Logo da Act" withPlaceholder/>
+            <Link href='/'>
+              <Image maw={80} src="/Logo.png" ml='md' alt="Logo da Act" withPlaceholder/>
+            </Link>
 
             <MediaQuery largerThan="sm" styles={{ display: 'none' }}>
               <Burger
