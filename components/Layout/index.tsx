@@ -14,10 +14,6 @@ import User from './_user';
 import { useSession } from 'next-auth/react';
 import Head from 'next/head';
 import Link from 'next/link';
-import { GetServerSideProps } from 'next';
-import { getServerSession } from 'next-auth';
-import { authOptions } from '@/pages/api/auth/[...nextauth]';
-import containsRole from '@/utils/auth/containsRole';
 
 
 interface PageLayoutProps {
