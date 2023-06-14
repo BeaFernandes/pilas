@@ -1,3 +1,4 @@
+import { prisma } from "@/lib/prisma";
 import { ApiError, ApiHandleError } from "@/errors/ApiHandleError";
 import withErrorHandler from "@/utils/api/withErrorHandler";
 import { Order } from "@prisma/client";
@@ -25,10 +26,10 @@ const handlerFunction = async (
 
     const errors: ApiError = {}
 
-    const validUser = await prisma?.user.findUnique({
+    const validUser = await prisma.user.findUnique({
       where: { id: user.id }
     })
-    const validProduct = await prisma?.product.findUnique({
+    const validProduct = await prisma.product.findUnique({
       where: {
         id: product.id,
       }
@@ -48,7 +49,7 @@ const handlerFunction = async (
 
     if (Object.keys(errors).length > 0) throw new ApiHandleError(400, errors)
 
-    const order = await prisma?.order.create({
+    const order = await prisma.order.create({
       data: {
         user: {
           connect: {
@@ -65,7 +66,7 @@ const handlerFunction = async (
       },
     })
 
-    await prisma?.user.update({
+    await prisma.user.update({
       where: {
         id: user.id,
       },
@@ -76,7 +77,7 @@ const handlerFunction = async (
       }
     })
 
-    await prisma?.product.update({
+    await prisma.product.update({
       where: {
         id: product.id,
       },

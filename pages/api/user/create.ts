@@ -1,3 +1,4 @@
+import { prisma } from "@/lib/prisma";
 import { ApiError, ApiHandleError } from "@/errors/ApiHandleError";
 import withErrorHandler from "@/utils/api/withErrorHandler";
 import Roles from "@/utils/auth/Roles";
@@ -24,7 +25,7 @@ const handlerFunction = async (
     
     const errors: ApiError = {}
 
-    const userExistis = await prisma?.user.findUnique({
+    const userExistis = await prisma.user.findUnique({
       where: { email: email }
     })
 
@@ -39,7 +40,7 @@ const handlerFunction = async (
 
     if (Object.keys(errors).length > 0) throw new ApiHandleError(400, errors)
 
-    const user = await prisma?.user.create({
+    const user = await prisma.user.create({
       data: {
         name,
         email,
@@ -53,7 +54,7 @@ const handlerFunction = async (
     })
 
     if(admin){
-      await prisma?.user.update({
+      await prisma.user.update({
         where: {
           id: user?.id,
         },

@@ -1,3 +1,4 @@
+import { prisma } from "@/lib/prisma";
 import { Button, Card, Group, List, NumberInput, Text, Title, TransferList, TransferListData } from '@mantine/core';
 import { GetServerSideProps } from 'next';
 import { getServerSession } from 'next-auth';
@@ -160,7 +161,7 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
     };
   }
 
-  const users = await prisma?.user.findMany({
+  const users = await prisma.user.findMany({
     where: {
       active: true,
       name: {

@@ -1,3 +1,4 @@
+import { prisma } from "@/lib/prisma";
 import { GetServerSideProps } from "next";
 import { signIn, useSession } from "next-auth/react";
 import { Button, Card, Group, Image, List, PasswordInput, Text, TextInput } from "@mantine/core";
@@ -112,7 +113,7 @@ export default function Login() {
 
 export const getServerSideProps: GetServerSideProps = async (context) => {
 
-  const currentMayor = await prisma?.mayor.findFirst({
+  const currentMayor = await prisma.mayor.findFirst({
     include: {
       user: true,
     },

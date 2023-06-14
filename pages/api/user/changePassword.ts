@@ -1,3 +1,4 @@
+import { prisma } from "@/lib/prisma";
 import { ApiError, ApiHandleError } from "@/errors/ApiHandleError";
 import withErrorHandler from "@/utils/api/withErrorHandler";
 import { User } from "@prisma/client";
@@ -19,7 +20,7 @@ const handlerFunction = async (
     
     const errors: ApiError = {}
 
-    const user = await prisma?.user.findUnique({
+    const user = await prisma.user.findUnique({
       where: { email: email }
     })
 
@@ -33,7 +34,7 @@ const handlerFunction = async (
 
     if (Object.keys(errors).length > 0) throw new ApiHandleError(400, errors)
 
-    const updatedUser = await prisma?.user.update({
+    const updatedUser = await prisma.user.update({
       where: {
         email, 
       },

@@ -1,3 +1,4 @@
+import { prisma } from "@/lib/prisma";
 import { ApiError, ApiHandleError } from "@/errors/ApiHandleError";
 import withErrorHandler from "@/utils/api/withErrorHandler";
 import Roles from "@/utils/auth/Roles";
@@ -22,7 +23,7 @@ const handlerFunction = async (
     
     const errors: ApiError = {}
 
-    const user = await prisma?.user.findUnique({
+    const user = await prisma.user.findUnique({
       where: { email: email },
       include: {
         roles: true,
@@ -48,7 +49,7 @@ const handlerFunction = async (
     }
 
     if(isAdmin() && !admin){
-      await prisma?.user.update({
+      await prisma.user.update({
         where: {
           email,
         },
@@ -61,7 +62,7 @@ const handlerFunction = async (
         }
       })
     } else if (!isAdmin() && admin){
-      await prisma?.user.update({
+      await prisma.user.update({
         where: {
           email,
         },
@@ -75,7 +76,7 @@ const handlerFunction = async (
       })
     }
     
-    const updatedUser = await prisma?.user.update({
+    const updatedUser = await prisma.user.update({
       where: {
         email, 
       },

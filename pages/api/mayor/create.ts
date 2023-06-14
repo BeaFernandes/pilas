@@ -1,3 +1,4 @@
+import { prisma } from "@/lib/prisma";
 import { ApiError, ApiHandleError } from "@/errors/ApiHandleError";
 import withErrorHandler from "@/utils/api/withErrorHandler";
 import Roles from "@/utils/auth/Roles";
@@ -25,7 +26,7 @@ const handlerFunction = async (
 
     if (Object.keys(errors).length > 0) throw new ApiHandleError(400, errors)
 
-    const oldMayor = await prisma?.mayor.findFirst({
+    const oldMayor = await prisma.mayor.findFirst({
       include: {
         user: true,
       },
@@ -45,7 +46,7 @@ const handlerFunction = async (
       }
     })
 
-    await prisma?.mayor.update({
+    await prisma.mayor.update({
       where: {
         id: oldMayor?.id,
       },
@@ -54,7 +55,7 @@ const handlerFunction = async (
       },
     })
 
-    await prisma?.user.update({
+    await prisma.user.update({
       where: {
         id: oldMayor?.userId,
       },
@@ -67,7 +68,7 @@ const handlerFunction = async (
       },
     })
 
-    await prisma?.user.update({
+    await prisma.user.update({
       where: {
         id: user,
       },
@@ -80,7 +81,7 @@ const handlerFunction = async (
       },
     })
 
-    const newMayor = await prisma?.mayor.create({
+    const newMayor = await prisma.mayor.create({
       data: {
         startOfMandate: moment(startOfMandate).format(),
         user: {

@@ -1,3 +1,4 @@
+import { prisma } from "@/lib/prisma";
 import { Button, Card, Drawer, Group, List, Select, Text, Title } from '@mantine/core';
 import { DateInput } from '@mantine/dates';
 import { GetServerSideProps } from 'next';
@@ -188,7 +189,7 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
     };
   }
   
-  const currentMayor = await prisma?.mayor.findFirst({
+  const currentMayor = await prisma.mayor.findFirst({
     include: {
       user: true,
     },
@@ -203,7 +204,7 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
     },
   })
 
-  const mayors = await prisma?.mayor.findMany({
+  const mayors = await prisma.mayor.findMany({
     include: {
       user: true,
     },
@@ -217,7 +218,7 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
     },
   })
 
-  const users = await prisma?.user.findMany({
+  const users = await prisma.user.findMany({
     orderBy: {
       name: 'asc',
     },

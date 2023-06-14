@@ -1,3 +1,4 @@
+import { prisma } from "@/lib/prisma";
 import { GetServerSideProps } from "next";
 import { getServerSession } from "next-auth";
 import { useSession } from "next-auth/react";
@@ -193,7 +194,7 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
   }
   // Destination with callback URL: `/api/auth/signin?error=SessionRequired&callbackUrl=${process.env.NEXTAUTH_URL}admin`
 
-  const currentUser = await prisma?.user.findUnique({
+  const currentUser = await prisma.user.findUnique({
     where: {
       id: session.user.id,
     },
