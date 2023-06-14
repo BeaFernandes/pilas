@@ -31,7 +31,7 @@ export default function Transactions({ orders, currentUser }: TransactionsPagePr
         <Group position='apart' c='#112C55' p='sm'>
           <Title order={2}>Transações</Title>
           <Text>
-            Seu saldo:<Text fw='bold' fz='xl' span> {currentUser?.balance} Pila</Text>
+            Seu saldo: <Text fw='bold' fz='xl' span>{`${currentUser.balance} Pila`.replace('.', ',')}</Text>
           </Text>
         </Group>
 

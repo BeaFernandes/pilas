@@ -28,7 +28,7 @@ export default function ProductsPage({products, currentUser}: ProductsPageProps)
         <Group position='apart' c='#112C55' p='sm'>
           <Title order={2}>O que vai ser hoje?</Title>
           <Text>
-            Seu saldo:<Text fw='bold' fz='xl' span> {currentUser.balance} Pila</Text>
+            Seu saldo: <Text fw='bold' fz='xl' span>{`${currentUser.balance} Pila`.replace('.', ',')}</Text>
           </Text>
         </Group>
 

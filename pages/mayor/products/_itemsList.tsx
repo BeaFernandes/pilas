@@ -184,7 +184,7 @@ export default function ItemsList({products}: ProductsPageProps) {
               products.map((product) =>
                 <tr key={product.id}>
                   <td><UnstyledButton fz={14} c='#343434' onClick={() => onDrawerOpen(product)}><Text truncate>{product.name}</Text></UnstyledButton></td>
-                  <td>{product.price} Pila</td>
+                  <td>{`${product.price} Pila`.replace('.', ',')}</td>
                   <td>{product.amount}</td>
                   <td>{product.active ? 'Ativo' : 'Inativo'}</td>
                   <td><Text truncate>{moment(product.updatedAt).format('lll')}</Text></td>
