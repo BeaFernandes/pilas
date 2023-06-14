@@ -114,15 +114,22 @@ export default function ItemsList({products, currentUser}: ProductsPageProps) {
             </Modal.Header>
 
             <Modal.Body >
-              <Text my='md'>Esta delícia custa <Text fw='bold' span> {chosenProduct?.price} Pila</Text></Text>
+              <Text my='md'>Esta delícia custa <Text fw='bold' span> {`${chosenProduct?.price} Pila`.replace('.', ',')}</Text></Text>
 
               <Group position='right'>
                 <Counter value={amount} onChange={setAmount} />
-                <Button type='button' onClick={() => handleSubmit()} variant='gradient' gradient={{from: '#4AC4F3', to: '#2399EF'}} radius='xl'>
+                <Button 
+                  type='button' 
+                  onClick={() => handleSubmit()} 
+                  variant='gradient' 
+                  gradient={{from: '#4AC4F3', to: '#2399EF'}} 
+                  radius='xl'
+                  miw={200}
+                >
                   <Group position='apart'>
                     <Text>Comprar</Text>
                     <Space />
-                    <Text span>{amount*chosenProductPrice} Pila</Text> 
+                    <Text span>{`${amount*chosenProductPrice} Pila`.replace('.', ',')}</Text> 
                   </Group>
                 </Button>
               </Group>
@@ -144,7 +151,7 @@ export default function ItemsList({products, currentUser}: ProductsPageProps) {
               products.map((product) =>
                 <tr key={product.id}>
                   <td><UnstyledButton fz={14} c='#343434' onClick={() => onModalOpen(product)}>{product.name}</UnstyledButton></td>
-                  <td>{product.price} Pila</td>
+                  <td>{`${product.price} Pila`.replace('.', ',')}</td>
                 </tr>  
               )
             :
