@@ -1,3 +1,4 @@
+import { prisma } from "@/lib/prisma";
 import { Button, Card, Drawer, Group, List, NumberInput, Select, Text, Title } from '@mantine/core';
 import { GetServerSideProps } from 'next';
 import { getServerSession } from 'next-auth';
@@ -211,7 +212,7 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
     };
   }
 
-  const products = await prisma?.product.findMany({
+  const products = await prisma.product.findMany({
     orderBy: {
       name: 'asc',
     },

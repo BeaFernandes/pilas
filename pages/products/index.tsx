@@ -1,3 +1,4 @@
+import { prisma } from "@/lib/prisma";
 import { Card, Group, Text, Title } from '@mantine/core';
 import { GetServerSideProps } from 'next';
 import { getServerSession } from 'next-auth';
@@ -52,7 +53,7 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
     };
   }
 
-  const products = await prisma?.product.findMany({
+  const products = await prisma.product.findMany({
     where: {
       amount: {
         gt: 0,
@@ -60,7 +61,7 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
       active: true,
     }
   })
-  const currentUser = await prisma?.user.findUnique({
+  const currentUser = await prisma.user.findUnique({
     where: {
       id: session.user.id,
     },

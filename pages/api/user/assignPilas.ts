@@ -1,8 +1,7 @@
+import { prisma } from "@/lib/prisma";
 import { ApiError, ApiHandleError } from "@/errors/ApiHandleError";
 import withErrorHandler from "@/utils/api/withErrorHandler";
-import Roles from "@/utils/auth/Roles";
 import { TransferListData } from "@mantine/core";
-import { User } from "@prisma/client";
 import { NextApiRequest, NextApiResponse } from "next";
 
 interface ReqProps {
@@ -26,7 +25,7 @@ const handlerFunction = async (
     if (Object.keys(errors).length > 0) throw new ApiHandleError(400, errors)
     
     users[1].map(async (user) => 
-      await prisma?.user.update({
+      await prisma.user.update({
         where: {
           email: user.value, 
         },

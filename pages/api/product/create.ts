@@ -1,6 +1,6 @@
+import { prisma } from "@/lib/prisma";
 import { ApiError, ApiHandleError } from "@/errors/ApiHandleError";
 import withErrorHandler from "@/utils/api/withErrorHandler";
-import Roles from "@/utils/auth/Roles";
 import { Product, User } from "@prisma/client";
 import { NextApiRequest, NextApiResponse } from "next";
 
@@ -20,7 +20,7 @@ const handlerFunction = async (
     
     const errors: ApiError = {}
 
-    const productExistis = await prisma?.product.findFirst({
+    const productExistis = await prisma.product.findFirst({
       where: { 
         name: name
       }
@@ -36,7 +36,7 @@ const handlerFunction = async (
 
     if (Object.keys(errors).length > 0) throw new ApiHandleError(400, errors)
 
-    const product = await prisma?.product.create({
+    const product = await prisma.product.create({
       data: {
         name,
         price,

@@ -1,3 +1,4 @@
+import { prisma } from "@/lib/prisma";
 import { GetServerSideProps } from "next";
 import { getServerSession } from "next-auth";
 import { useSession } from "next-auth/react";
@@ -54,7 +55,7 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
     };
   }
 
-  const currentUser = await prisma?.user.findUnique({
+  const currentUser = await prisma.user.findUnique({
     where: {
       id: session.user.id,
     },
@@ -64,7 +65,7 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
     }
   })
 
-  const orders = await prisma?.order.findMany({
+  const orders = await prisma.order.findMany({
     where: {
       userId: session.user.id,
     },
