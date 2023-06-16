@@ -9,6 +9,7 @@ import { ApiError } from '@/errors/ApiHandleError';
 import { useRouter } from "next/navigation";
 import { notifications } from "@mantine/notifications";
 import { IconAlertTriangleFilled } from "@tabler/icons-react";
+import Head from "next/head";
 
 export default function Login() {
   const { data: session, status } = useSession()
@@ -70,6 +71,10 @@ export default function Login() {
 
   return (
     <div>
+        <Head>
+          <title>Pìlas | Login</title>
+          <meta name="viewport" content="minimum-scale=1, initial-scale=1, width=device-width" />
+        </Head>
         <Flex 
           gap="md"
           justify="center"
