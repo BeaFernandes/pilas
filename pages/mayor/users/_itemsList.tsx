@@ -140,8 +140,8 @@ export default function ItemsList({users, departments}: ProductsPageProps) {
         </thead>
         <tbody>
           {
-            users.length > 0 ?
-              users.map((user) =>
+            users?.length > 0 ?
+              users?.map((user) =>
                 <tr key={user.id}>
                   <td><UnstyledButton fz={14} c='#343434' onClick={() => onDrawerOpen(user)}><Text truncate>{user.name}</Text></UnstyledButton></td>
                   <td><Text>{`${user.balance} Pila`.replace('.', ',')}</Text></td>
