@@ -26,8 +26,8 @@ export default function ItemsList({ orders }: TransactionsPageProps) {
         </thead>
         <tbody>
           {
-            orders.length > 0 ?
-              orders.map((order) =>
+            orders?.length > 0 ?
+              orders?.map((order) =>
                 <tr key={order.id}>
                   <td>
                     <Text truncate>{moment(order.createdAt).format('lll')}</Text>

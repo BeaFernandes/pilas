@@ -37,7 +37,7 @@ export default function ItemsList({users, departments}: ProductsPageProps) {
     },
   });
 
-  const departmentsData: any = departments.map((dep) => {
+  const departmentsData: any = departments?.map((dep) => {
     return {value: dep.id, label: dep.name}
   })
 
@@ -260,8 +260,8 @@ export default function ItemsList({users, departments}: ProductsPageProps) {
         </thead>
         <tbody>
           {
-            users.length > 0 ?
-              users.map((user) =>
+            users?.length > 0 ?
+              users?.map((user) =>
                 <tr key={user.id}>
                   <td><UnstyledButton fz={14} c='#343434' onClick={() => onDrawerOpen(user)}>{user.name}</UnstyledButton></td>
                   <td>{user.email}</td>

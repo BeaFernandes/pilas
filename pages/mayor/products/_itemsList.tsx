@@ -180,8 +180,8 @@ export default function ItemsList({products}: ProductsPageProps) {
         </thead>
         <tbody>
           {
-            products.length > 0 ?
-              products.map((product) =>
+            products?.length > 0 ?
+              products?.map((product) =>
                 <tr key={product.id}>
                   <td><UnstyledButton fz={14} c='#343434' onClick={() => onDrawerOpen(product)}><Text truncate>{product.name}</Text></UnstyledButton></td>
                   <td>{`${product.price} Pila`.replace('.', ',')}</td>

@@ -1,14 +1,8 @@
-import { Anchor, Button, Checkbox, Container, Drawer, Group, List, Modal, NumberInput, PasswordInput, Select, Table, Text, TextInput, UnstyledButton } from '@mantine/core';
+import { Checkbox, Drawer, Group, NumberInput, Select, Table, Text, TextInput, UnstyledButton } from '@mantine/core';
 import { Department, Role, User } from "@prisma/client";
-import { IconAlertTriangleFilled } from "@tabler/icons-react";
 import { useForm } from '@mantine/form';
-import { ApiError } from '@/errors/ApiHandleError';
-import axiosApi from '@/services/axiosApi';
-import { notifications } from "@mantine/notifications";
-import { useRouter } from "next/navigation";
 import { useState } from 'react';
 import containsRole from '@/utils/auth/containsRole';
-import { useDisclosure } from '@mantine/hooks';
 import moment from 'moment';
 
 export type ComposedUser = User & {
@@ -23,8 +17,6 @@ interface ProductsPageProps {
 
 export default function ItemsList({users, departments}: ProductsPageProps) {
   const [openedDrawer, setDrawerOpen] = useState(false)
-  const [openedModal, setModalOpen] = useState(false)
-  const router = useRouter()
   const form = useForm({
     initialValues: {
       name: '',
@@ -39,7 +31,7 @@ export default function ItemsList({users, departments}: ProductsPageProps) {
     },
   });
 
-  const departmentsData: any = departments.map((dep) => {
+  const departmentsData: any = departments?.map((dep) => {
     return {value: dep.id, label: dep.name}
   })
 
@@ -60,92 +52,6 @@ export default function ItemsList({users, departments}: ProductsPageProps) {
 
   const onDrawerClose = () => {
     setDrawerOpen(false)
-  }
-
-  const handleSubmit = async () => {
-    axiosApi
-      .post('/api/user/update', form.values)
-      .then((res) => {
-        if (res.status == 201) {
-          form.reset()
-          onDrawerClose()
-          router.push('/admin/users')
-          notifications.show({
-            title: 'Uhul!',
-            message: 'Usuário atualizado com sucesso.',
-            color: "green",
-          })
-        } else {
-          notifications.show({
-            title: 'Ops! 🙁',
-            message: 'Algo de errado não está certo, tente novamente mais tarde.',
-            color: "red",
-          })
-        }
-      })
-      .catch((e) => {
-        if (e.response.data.data) {
-          handleError(e.response.data.data)
-        }
-      })
-  }
-
-  const handleError = (errors: ApiError) => {
-    form.setErrors(errors)
-    notifications.show({
-      title: 'Sinto muito! 🙁',
-      message: (
-        <List icon={ <Text color='red'><IconAlertTriangleFilled /></Text> }>
-          {Object.keys(errors).map((key) => {
-            return (
-              <List.Item key={key}>
-                {errors[key]}
-              </List.Item>
-            )
-          })}
-        </List>
-      ),
-      color: "red",
-    })
-  }
-
-  const onModalOpen = () => {
-    setDrawerOpen(false)
-    setModalOpen(true)
-  }
-
-  const onModalClose = () => {
-    setModalOpen(false)
-    setDrawerOpen(true)
-  }
-
-  const onChangePassword = () => {
-    axiosApi
-      .post('/api/user/changePassword', form.values)
-      .then((res) => {
-        if (res.status == 201) {
-          form.setValues({
-            password: '',
-          })
-          onModalClose()
-          notifications.show({
-            title: 'Uhul!',
-            message: 'Senha atualizada com sucesso.',
-            color: "green",
-          })
-        } else {
-          notifications.show({
-            title: 'Ops! 🙁',
-            message: 'Algo de errado não está certo, tente novamente mais tarde.',
-            color: "red",
-          })
-        }
-      })
-      .catch((e) => {
-        if (e.response.data.data) {
-          handleError(e.response.data.data)
-        }
-      })
   }
 
   return (

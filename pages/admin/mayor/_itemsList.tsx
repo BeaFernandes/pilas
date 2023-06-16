@@ -60,8 +60,8 @@ export default function ItemsList({mayors}: ItemsPageProps) {
         </thead>
         <tbody>
           {
-            mayors.length > 0 ?
-              mayors.map((mayor) =>
+            mayors?.length > 0 ?
+              mayors?.map((mayor) =>
                 <tr key={mayor.id}>
                   <td><UnstyledButton fz={14} c='#343434' onClick={() => onModalOpen(mayor)}>{mayor.user.name}</UnstyledButton></td>
                   <td>{moment(mayor.startOfMandate).format('MMMM')}</td>
