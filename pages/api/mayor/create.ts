@@ -46,27 +46,29 @@ const handlerFunction = async (
       }
     })
 
-    await prisma.mayor.update({
-      where: {
-        id: oldMayor?.id,
-      },
-      data: {
-        endOfMandate: moment(startOfMandate).subtract(1, 'day').format(),
-      },
-    })
-
-    await prisma.user.update({
-      where: {
-        id: oldMayor?.userId,
-      },
-      data: {
-        roles: {
-          disconnect: {
-            id: Roles.MAYOR,
+    if(oldMayor){
+      await prisma.mayor.update({
+        where: {
+          id: oldMayor?.id,
+        },
+        data: {
+          endOfMandate: moment(startOfMandate).subtract(1, 'day').format(),
+        },
+      })
+  
+      await prisma.user.update({
+        where: {
+          id: oldMayor?.userId,
+        },
+        data: {
+          roles: {
+            disconnect: {
+              id: Roles.MAYOR,
+            }
           }
-        }
-      },
-    })
+        },
+      })
+    }
 
     await prisma.user.update({
       where: {
