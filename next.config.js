@@ -2,15 +2,12 @@
 const nextConfig = {
   reactStrictMode: true,
 }
+const withPWA = require('next-pwa')({
+  dest: 'public'
+})
 
-module.exports = nextConfig /*{
-  async redirects() {
-    return [
-      {
-        source: '/',
-        destination: `/api/auth/signin`,
-        permanent: false,
-      },
-    ]
-  },
-}*/
+module.exports = nextConfig 
+
+module.exports = withPWA({
+  // next.js config
+})

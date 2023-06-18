@@ -1,7 +1,6 @@
 import { Notifications } from "@mantine/notifications";
 import { SessionProvider } from "next-auth/react";
 import type { AppProps } from "next/app";
-import Layout from '../components/Layout'
 import { MantineProvider } from '@mantine/core'
 import theme from '@/config/theme'
 import { DatesProvider } from "@mantine/dates";
@@ -21,7 +20,7 @@ export default function App({
       <SessionProvider session={session}>
         <DatesProvider settings={{ locale: 'pt-br' }}>
           <Notifications />
-            <Component {...pageProps} />
+          <Component {...pageProps} />
         </DatesProvider>
       </SessionProvider>
     </MantineProvider>  
