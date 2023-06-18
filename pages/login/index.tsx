@@ -73,7 +73,6 @@ export default function Login() {
     <div>
         <Head>
           <title>Pìlas | Login</title>
-          <meta name="viewport" content="minimum-scale=1, initial-scale=1, width=device-width" />
         </Head>
         <Flex 
           gap="md"
@@ -83,7 +82,8 @@ export default function Login() {
           wrap="wrap"
           bg='#f8f9fa'
           h='100vh'
-          sx={{overflowY: 'hidden'}}>
+          sx={{overflowY: 'hidden'}}
+        >
           <Card 
             padding='xl' 
             radius='lg' 
