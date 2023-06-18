@@ -15,7 +15,7 @@ export default function Document() {
         <meta name="description" content={APP_DESCRIPTION} />
         <meta name="format-detection" content="telephone=no" />
         <meta name="mobile-web-app-capable" content="yes" />
-        <meta name="theme-color" content="#4AC4F3" />
+        <meta name="theme-color" content="#ffffff" />
 
 
         <link rel="manifest" href="/manifest.json" />
