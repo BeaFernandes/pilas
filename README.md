@@ -34,6 +34,12 @@ Create a copy of `.env.example` as `.env` and change the required environment va
 
 ### Run in development mode
 
+To update dependencies:
+
+```bash
+yarn
+```
+
 To run the development server:
 
 ```bash
@@ -43,8 +49,6 @@ yarn dev
 Open [http://localhost:3000](http://localhost:3000).
 
 ## Useful commands
-
-(feel free to add more)
 
 ### Prisma
 
@@ -60,8 +64,20 @@ Migrate in production mode: this will not create new migrations, just apply the 
 npx prisma migrate deploy
 ```
 
-Prisma studio: this opens a graphical UI for database management (you can also use adminer if running db with docker compose)
+Prisma studio: this opens a graphical UI for database management (you can also use adminer if running db with docker compose).
 
 ```bash
 npx prisma studio
+```
+
+Running seeds only, although migrate will run it too.
+
+```bash
+npx prisma db seed
+```
+
+Reset database: it will erase everything.
+
+```bash
+npx prisma migrate reset
 ```
