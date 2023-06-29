@@ -1,6 +1,6 @@
 # Pilas
 
-Pilas is a project from the technology company Act Tecnologia, where its employees have access to several kinds of food in exchange for a fictitious coin called Pila.
+Pilas is a project from a technology company named Act Tecnologia, where its employees have access to several kinds of food in exchange for a fictitious coin called Pila.
 
 This system was devoloped to help Pilas, as it is a tool to manage those foods consumption.
 
