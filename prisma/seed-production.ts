@@ -52,42 +52,6 @@ async function main() {
 				}
 			},
 		}),
-
-		...mayorsSeed.map((mayor) =>
-			prisma.user.upsert({
-				where: {
-					email: mayor.email
-				},
-				update: {},
-				create: {
-					...mayor,
-				},
-			})
-		),
-
-		...usersSeed.map((user) => 
-			prisma.user.upsert({
-				where: {
-					email: user.email,
-				},
-				update : {},
-				create: {
-					...user,
-				},
-			})
-		),
-
-		...products.map((product) =>
-			prisma.product.upsert({
-				where: {
-					name: product.name,
-				},
-				update: {},
-				create: {
-					...product
-				},
-			})
-		),
 	])
 }
 
